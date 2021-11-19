@@ -27,8 +27,8 @@ import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-
 import DocumentPicker from 'react-native-document-picker';
+import {CarDropdown} from '../../components/Dropdown/CarDropdown';
 
 export default documentUpload = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -265,6 +265,15 @@ export default documentUpload = ({navigation}) => {
                       </View>
                     </TouchableOpacity>
                   </View>
+                </View>
+              </View>
+
+              <View style={styles.singleItemStyle}>
+                <Text style={styles.headerText}>Car Type</Text>
+                <Text style={styles.subText}>Please select you car type</Text>
+
+                <View>
+                  <CarDropdown />
                 </View>
               </View>
 
