@@ -179,7 +179,7 @@ export default signIn = ({navigation}) => {
               </View>
               <TouchableOpacity
                 style={{width: '100%'}}
-                onPress={() => navigation.navigate('')}>
+                onPress={() => navigation.navigate('Dashboard')}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Sign In</Text>
                 </View>
