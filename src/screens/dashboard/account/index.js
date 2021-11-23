@@ -19,6 +19,7 @@ import {SearchBar} from '../../../components/Input/Searchbar';
 import Icon from 'react-native-vector-icons/Feather';
 import {Box} from '../../../components/Box/box';
 import {useNavigation} from '@react-navigation/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const MyAccount = () => {
   const navigation = useNavigation();
@@ -74,7 +75,14 @@ export const MyAccount = () => {
               navigation.navigate('HelpAndSupports');
             }}
           />
-          <Box name="Logout" icon="logout" onPress={() => {}} />
+          <Box
+            name="Logout"
+            icon="logout"
+            onPress={() => {
+              console.warn('token removed');
+              AsyncStorage.removeItem('@authtoken');
+            }}
+          />
         </>
       </View>
     </ScrollView>

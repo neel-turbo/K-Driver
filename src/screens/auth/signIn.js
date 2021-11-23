@@ -22,6 +22,8 @@ import {
 import IconFontisto from 'react-native-vector-icons/dist/Fontisto';
 import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import IconFeather from 'react-native-vector-icons/dist/Feather';
+import {login} from '../../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default signIn = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -179,7 +181,12 @@ export default signIn = ({navigation}) => {
               </View>
               <TouchableOpacity
                 style={{width: '100%'}}
-                onPress={() => navigation.navigate('Dashboard')}>
+                onPress={() => {
+                  console.warn('Token set');
+                  AsyncStorage.setItem('@authtoken', 'test');
+                  // navigation.navigate('Home');
+                  // console.log("Navihatio: ", navigation);
+                }}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Sign In</Text>
                 </View>

@@ -11,6 +11,8 @@ import {SuccessfulRide} from '../../screens/dashboard/successful-ride/index';
 import {PaymentDetails} from '../../screens/dashboard/payment-details/index';
 import {TermsAndCondition} from '../../screens/dashboard/terms-and-condition/index';
 import {HelpAndSupports} from '../../screens/dashboard/help-and-supports/index';
+import { DashBoardTab } from '../dashboardNavigation';
+import { Text } from 'react-native';
 
 //create a stack
 const Stack = createStackNavigator();
@@ -22,7 +24,7 @@ export const HomeStack = () => {
           header: () => <CustomHeader />,
         }}
         name="Home"
-        component={Home}
+        component={DashBoardTab}
       />
       <Stack.Screen
         options={{

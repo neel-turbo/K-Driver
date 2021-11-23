@@ -20,6 +20,7 @@ import payment from '../asserts/payment.png';
 import terms from '../asserts/terms.png';
 import help from '../asserts/union.png';
 import logout from '../asserts/logout.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const IMG_SIZE = 60;
 
@@ -87,7 +88,10 @@ export const CustomDrawer = props => {
         />
       </DrawerContentScrollView>
       <View style={styles.bottom}>
-        <Navlink logo={logout} title="Logout" onPress={() => {}} />
+        <Navlink logo={logout} title="Logout" onPress={() => {
+          console.warn("token removed");
+           AsyncStorage.removeItem('@authtoken')
+        }} />
       </View>
     </View>
   );

@@ -10,39 +10,14 @@ import documentUpload from '../screens/account/documentUpload';
 import {Toll} from '../screens/dashboard/toll';
 import {MyAccount} from '../screens/dashboard/account';
 import {HomeStack} from './stack';
-import {useNavigationState} from '@react-navigation/core';
-import {getCurrentTabs} from './hdieTabs';
-
-//Drawer
-// const Drawer = createDrawerNavigator();
-// export const DashBoard = () => {
-//   return (
-//     <Drawer.Navigator
-//       initialRouteName="Home"
-//       drawerType="front"
-//       drawerContent={props => <CustomDrawer {...props} />}>
-//       <Drawer.Screen
-//         options={{
-//           headerShown: false,
-//         }}
-//         name="Home"
-//         component={HomeStack}
-//       />
-//     </Drawer.Navigator>
-//   );
-// };
-
+import { Home } from '../screens/dashboard/home';
 const Tab = createBottomTabNavigator();
 
-export const DashBoard = () => {
-  // const state = useNavigationState(state => state);
-  // const routeName = state.routeNames;
-  // console.log(routeName);
+export const DashBoardTab = () => {
   return (
     <Tab.Navigator
       defaultScreenOptions="Home"
       screenOptions={({route}) => ({
-        tabBarVisible: getCurrentTabs(route),
         headerShown: false,
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
@@ -83,23 +58,11 @@ export const DashBoard = () => {
           // marginTop:2
         },
       }}>
-      <Tab.Screen
-        options={({route}) => {
-          // console.log('State', state);
-        }}
-        name="Home"
-        component={HomeStack}
-      />
+      <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Toll" component={Toll} />
       <Tab.Screen name="Payment" component={PaymentDetails} />
       <Tab.Screen name="Doc" component={documentUpload} />
-      <Tab.Screen
-        options={({route}) => ({
-          tabBarVisible: route.state && route.state.index === 0,
-        })}
-        name="Account"
-        component={MyAccount}
-      />
+      <Tab.Screen name="Account" component={MyAccount} />
     </Tab.Navigator>
   );
 };
