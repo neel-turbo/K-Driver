@@ -25,6 +25,8 @@ import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
 import IconIonicons from 'react-native-vector-icons/dist/Ionicons';
 import CheckBox from '@react-native-community/checkbox';
+import Toast from 'react-native-toast-message';
+// import userVerification from userVerification;
 
 export default signUp = ({navigation}) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -101,6 +103,71 @@ export default signUp = ({navigation}) => {
     setFocusCPassword(false);
   };
 
+  const handlesubmit = () => {
+    if (name.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your name ',
+      });
+    } else if (email.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your email ',
+      });
+    } else if (mobile.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your mobile ',
+      });
+    } else if (password.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your password ',
+      });
+    } else if (password != cPassword) {
+      Toast.show({
+        type: 'error',
+        text1: 'password and confirm password in not match ',
+      });
+    } else {
+      const body = {
+        email: email,
+        name: name,
+        cellphone: mobile,
+        password: password,
+        c_password: password,
+      };
+      (async () => {
+        const rawResponse = await fetch(
+          // 'http://mydevfactory.com/~devserver/kabou/api/driver/register',
+          'http://kabou.us/api/driver/register',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          },
+        );
+        const content = await rawResponse.json();
+
+        console.log(content);
+        if (content.success) {
+          Toast.show({
+            type: 'success',
+            text1: content.message,
+          });
+          navigation.navigate('userVerification', {userEmail: email});
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: content.message,
+          });
+        }
+      })();
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
       <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
@@ -368,7 +435,8 @@ export default signUp = ({navigation}) => {
 
               <TouchableOpacity
                 style={{width: '100%'}}
-                onPress={() => navigation.navigate('userVerification')}>
+                // onPress={() => navigation.navigate('userVerification')}
+                onPress={() => handlesubmit()}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Sign Up</Text>
                 </View>

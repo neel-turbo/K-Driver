@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -23,8 +23,9 @@ import IconFontisto from 'react-native-vector-icons/dist/Fontisto';
 import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Toast from 'react-native-toast-message';
 
-export default otp = ({navigation}) => {
+export default otp = ({navigation, route}) => {
   const [digitOne, setDigitOne] = useState(0);
   const [digitTwo, setDigitTwo] = useState(0);
   const [digitThree, setDigitThree] = useState(0);
@@ -36,6 +37,8 @@ export default otp = ({navigation}) => {
   const [focusDigitThree, setFocusDigitThree] = useState(false);
 
   const [focusDigitFour, setFocusDigitFour] = useState(false);
+
+  const [userEmail, setUserEmail] = useState('');
 
   const onFocusTextInputDigitOne = () => {
     setFocusDigitOne(true);
@@ -67,6 +70,66 @@ export default otp = ({navigation}) => {
 
   const onBlurTextInputDigitFour = () => {
     setFocusDigitFour(false);
+  };
+
+  useEffect(() => {
+    const passedData = route.params;
+
+    // console.log('eeeee', passedData)
+    if (passedData) {
+      setUserEmail(passedData.userEmail);
+    }
+  }, [route.params]);
+
+  const handlesubmit = () => {
+    if (
+      digitOne == '' &&
+      digitTwo == '' &&
+      digitThree == '' &&
+      digitFour == ''
+    ) {
+      // console.warn('abccccccccccc');
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your OTP ',
+      });
+    } else {
+      const body = {
+        email: userEmail,
+        otp: digitOne + digitTwo + digitThree + digitFour,
+      };
+      // console.log('heeeeeeeeeeeee', body);
+      (async () => {
+        const rawResponse = await fetch(
+          // 'http://mydevfactory.com/~devserver/kabou/api/driver/otp-verify-to-reset-password',
+          'http://kabou.us/api/driver/otp-verify-to-reset-password',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          },
+        );
+        const content = await rawResponse.json();
+
+        console.log(content);
+        if (content.success) {
+          Toast.show({
+            type: 'success',
+            text1: content.message,
+          });
+          // navigation.navigate('userVerification', {userEmail: email});
+          navigation.navigate('setPassword', {userEmail: userEmail});
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: content.message,
+          });
+        }
+      })();
+    }
   };
 
   return (
@@ -199,7 +262,8 @@ export default otp = ({navigation}) => {
                 </View>
               </View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('setPassword')}
+                // onPress={() => navigation.navigate('setPassword')}
+                onPress={() => handlesubmit()}
                 style={{width: '100%'}}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Submit</Text>

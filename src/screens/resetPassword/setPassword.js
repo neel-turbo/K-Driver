@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -22,8 +22,9 @@ import {
 import IconFontisto from 'react-native-vector-icons/dist/Fontisto';
 import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import IconFeather from 'react-native-vector-icons/dist/Feather';
+import Toast from 'react-native-toast-message';
 
-export default setPassword = ({navigation}) => {
+export default setPassword = ({navigation, route}) => {
   const [password, setPassword] = useState('');
   const [cPassword, setCPassword] = useState('');
 
@@ -37,6 +38,8 @@ export default setPassword = ({navigation}) => {
 
   const [focusPassword, setFocusPassword] = useState(false);
   const [focusCPassword, setFocusCPassword] = useState(false);
+
+  const [userEmail, setUserEmail] = useState('');
 
   const showHidePasswordFun = () => {
     setShowHide(!showHide);
@@ -62,6 +65,64 @@ export default setPassword = ({navigation}) => {
 
   const onBlurTextInputCPassword = () => {
     setFocusCPassword(false);
+  };
+
+  useEffect(() => {
+    const passedData = route.params;
+
+    // console.log('eeeee', passedData)
+    if (passedData) {
+      setUserEmail(passedData.userEmail);
+    }
+  }, [route.params]);
+
+  const handlesubmit = () => {
+    if (password.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your password ',
+      });
+    } else if (password != cPassword) {
+      Toast.show({
+        type: 'error',
+        text1: 'password and confirm password in not match ',
+      });
+    } else {
+      const body = {
+        email: userEmail,
+        password: password,
+      };
+      (async () => {
+        const rawResponse = await fetch(
+          // 'http://mydevfactory.com/~devserver/kabou/api/driver/register',
+          'http://kabou.us/api/driver/reset-password',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          },
+        );
+        const content = await rawResponse.json();
+
+        console.log(content);
+        if (content.success) {
+          Toast.show({
+            type: 'success',
+            text1: content.message,
+          });
+          // navigation.navigate('userVerification', {userEmail: email});
+          navigation.navigate('');
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: content.message,
+          });
+        }
+      })();
+    }
   };
 
   return (
@@ -222,7 +283,8 @@ export default setPassword = ({navigation}) => {
               </View>
               <TouchableOpacity
                 style={{width: '100%'}}
-                onPress={() => navigation.navigate('')}>
+                // onPress={() => navigation.navigate('')}>
+                onPress={() => handlesubmit()}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Continue</Text>
                 </View>

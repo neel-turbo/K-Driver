@@ -29,14 +29,19 @@ import IconEntypo from 'react-native-vector-icons/dist/Entypo';
 
 import CheckBox from '@react-native-community/checkbox';
 
+import Toast from 'react-native-toast-message';
+
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
 export default account = ({navigation}) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
-  const [name, setName] = useState('John Deo');
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('800 1541 517');
-  const [password, setPassword] = useState('');
-  const [cPassword, setCPassword] = useState('');
+  const [name, setName] = useState('');
+
+  const [mobile, setMobile] = useState('');
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [zip, setZip] = useState('');
 
   const [showHide, setShowHide] = useState(false);
 
@@ -102,6 +107,116 @@ export default account = ({navigation}) => {
 
   const onBlurTextInputCPassword = () => {
     setFocusCPassword(false);
+  };
+  // ----------------------------------------------------------------------------------------------------
+
+  const handlesubmit = () => {
+    if (name.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your name ',
+      });
+    } else if (mobile.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your mobile ',
+      });
+    } else if (street.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your street ',
+      });
+    } else if (city.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your city ',
+      });
+    } else if (zip.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your Zip ',
+      });
+    } else {
+      const body = {
+        // email: email,
+        name: name,
+        cellphone: mobile,
+        street: street,
+        city: city,
+        zip: zip,
+      };
+      (async () => {
+        const rawResponse = await fetch(
+          // 'http://mydevfactory.com/~devserver/kabou/api/driver/update-profile',
+          'http://kabou.us/api/driver/update-profile',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          },
+        );
+        const content = await rawResponse.json();
+
+        console.log(content);
+        if (content.success) {
+          Toast.show({
+            type: 'success',
+            text1: content.message,
+          });
+          // navigation.navigate('userVerification', {userEmail: email});
+          console.log('hellllluuuuuuuuuuuuuu');
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: content.message,
+          });
+        }
+      })();
+    }
+  };
+
+  // --------------------Profile image upload here---------------------------------------------------
+
+  const [filePath, setFilePath] = useState({});
+  const chooseFile = () => {
+    let options = {
+      title: 'Select Image',
+      customButtons: [
+        {
+          name: 'customOptionKey',
+          title: 'Choose Photo from Custom Option',
+        },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    // launchCamera(options, callback); launchImageLibrary
+
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log(response);
+        // You can also display the image using data:
+        // let source = {
+        //   uri: 'data:image/jpeg;base64,' + response.data
+        // };
+        setFilePath(source);
+      }
+    });
   };
 
   return (
@@ -175,7 +290,8 @@ export default account = ({navigation}) => {
                       padding: 15,
                       borderRadius: 30,
                       elevation: 10,
-                    }}>
+                    }}
+                    onPress={() => chooseFile()}>
                     <IconEntypo color={'#003169'} size={24} name={'camera'} />
                   </TouchableOpacity>
                 </View>
@@ -280,10 +396,10 @@ export default account = ({navigation}) => {
                 <TextInput
                   style={styles.textInput}
                   placeholder="Street"
-                  value={email}
+                  value={street}
                   onBlur={() => onBlurTextInputEmail()}
                   onFocus={() => onFocusTextInputEmail()}
-                  onChangeText={text => setEmail(text)}
+                  onChangeText={text => setStreet(text)}
                 />
               </View>
 
@@ -309,9 +425,9 @@ export default account = ({navigation}) => {
 
                 <TextInput
                   style={styles.textInput}
-                  value={password}
+                  value={city}
                   placeholder="City"
-                  onChangeText={text => setPassword(text)}
+                  onChangeText={text => setCity(text)}
                   onBlur={() => onBlurTextInputPassword()}
                   onFocus={() => onFocusTextInputPassword()}
                 />
@@ -339,17 +455,18 @@ export default account = ({navigation}) => {
                 <TextInput
                   style={styles.textInput}
                   keyboardType="numeric"
-                  value={cPassword}
+                  value={zip}
                   placeholder="Zip"
-                  onChangeText={text => setCPassword(text)}
+                  onChangeText={text => setZip(text)}
                   onBlur={() => onBlurTextInputCPassword()}
                   onFocus={() => onFocusTextInputCPassword()}
                 />
               </View>
-
+              {/* handlesubmit */}
               <TouchableOpacity
                 style={{width: '100%'}}
-                onPress={() => navigation.navigate('')}>
+                // onPress={() => navigation.navigate('')}>
+                onPress={() => handlesubmit()}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Update</Text>
                 </View>

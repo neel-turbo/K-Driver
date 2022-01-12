@@ -22,6 +22,8 @@ import {
 import IconFontisto from 'react-native-vector-icons/dist/Fontisto';
 import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import IconFeather from 'react-native-vector-icons/dist/Feather';
+import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default signIn = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -54,6 +56,75 @@ export default signIn = ({navigation}) => {
 
   const onBlurTextInputPassword = () => {
     setFocusPassword(false);
+  };
+  const handlesubmit = () => {
+    if (email.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your email ',
+      });
+    } else if (password.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your password ',
+      });
+    } else {
+      const body = {
+        email: email,
+        password: password,
+      };
+      (async () => {
+        const rawResponse = await fetch(
+          // 'http://mydevfactory.com/~devserver/kabou/api/driver/login',
+          'http://kabou.us/api/driver/login',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          },
+        );
+        const content = await rawResponse.json();
+        console.log('testinggggggggggggggg', content.data.driver);
+        if (content.data) {
+          Toast.show({
+            type: 'success',
+            text1: content.message,
+          });
+          // storeData();
+          // storeData('userToken', content.data.token);
+          //AsyncStorage.setItem('user', JSON.stringify(content.data.driver));
+          AsyncStorage.setItem('userToken', content.data.token);
+          // const Utoken = content.data.token;
+          // const storeUserData = async Utoken => {
+          //   try {
+          //     await AsyncStorage.setItem('userToken', Utoken);
+          //   } catch (e) {
+          //     // saving error
+          //   }
+          // };
+
+          setTimeout(() => {
+            navigation.navigate('documentUpload');
+            console.log(
+              '  AsyncStorage.setItem( JSON.stringify(content.data));',
+              AsyncStorage.getItem('user'),
+            );
+          }, 1000);
+
+          // navigation.navigate('userVerification', {userEmail: email});
+          //  navigation.navigate('documentUpload');
+          // navigation.navigate('../account/documentUpload');
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: content.message,
+          });
+        }
+      })();
+    }
   };
 
   return (
@@ -179,7 +250,8 @@ export default signIn = ({navigation}) => {
               </View>
               <TouchableOpacity
                 style={{width: '100%'}}
-                onPress={() => navigation.navigate('')}>
+                // onPress={() => navigation.navigate('')}>
+                onPress={() => handlesubmit()}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Sign In</Text>
                 </View>

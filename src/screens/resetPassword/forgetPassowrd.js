@@ -23,6 +23,7 @@ import IconFontisto from 'react-native-vector-icons/dist/Fontisto';
 import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Toast from 'react-native-toast-message';
 
 export default forgetPassword = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -56,7 +57,49 @@ export default forgetPassword = ({navigation}) => {
   const onBlurTextInputPassword = () => {
     setFocusPassword(false);
   };
+  const handlesubmit = () => {
+    if (email.length == 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter your email ',
+      });
+    } else {
+      const body = {
+        email: email,
+      };
+      (async () => {
+        const rawResponse = await fetch(
+          // 'http://mydevfactory.com/~devserver/kabou/api/driver/forgot-password',
+          'http://kabou.us/api/driver/forgot-password',
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+          },
+        );
+        const content = await rawResponse.json();
 
+        console.log(content);
+        if (content.success) {
+          Toast.show({
+            type: 'success',
+            text1: content.message,
+          });
+          navigation.navigate('otp', {userEmail: email});
+          // navigation.navigate('userVerification', {userEmail: email});
+          // navigation.navigate('otp', {userEmail: email});
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: content.message,
+          });
+        }
+      })();
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
       <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
@@ -141,7 +184,8 @@ export default forgetPassword = ({navigation}) => {
 
               <TouchableOpacity
                 style={{width: '100%'}}
-                onPress={() => navigation.navigate('otp')}>
+                // onPress={() => navigation.navigate('otp')}>
+                onPress={() => handlesubmit()}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Continue</Text>
                 </View>

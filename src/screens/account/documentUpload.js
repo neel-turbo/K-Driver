@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Modal,
 } from 'react-native';
 import colors from '../../asserts/colors.js/colors';
 import {
@@ -28,7 +29,16 @@ import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
 import DocumentPicker from 'react-native-document-picker';
+import {ImagePickerModal} from './../../Components/image-picker-modal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
+
+// import ImagePicker from 'react-native-image-picker';
+
+// import * as ImagePicker from 'react-native-image-picker';
 
 export default documentUpload = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -81,6 +91,1020 @@ export default documentUpload = ({navigation}) => {
       } else {
         throw err;
       }
+    }
+  };
+
+  // --------------------------------------------------------------------------------------
+
+  const [userToken, setUserToken] = useState('');
+
+  const [filePathDlFront, setFilePathDlFront] = useState(null);
+  const [filePathDlBack, setFilePathDlBack] = useState(null);
+
+  const [visibleDlFront, setVisibleDlFront] = useState(null);
+  const [visibleDlBack, setVisibleDlBack] = useState(null);
+
+  const [filePathInsFront, setFilePathInsFront] = useState(null);
+  const [filePathInsBack, setFilePathInsBack] = useState(null);
+
+  const [visibleInsFront, setVisibleInsFront] = useState(null);
+  const [visibleInsBack, setVisibleInsBack] = useState(null);
+
+  const [visibleCarRegFront, setVisibleCarRegFront] = useState(null);
+  const [visibleCarRegBack, setVisibleCarRegBack] = useState(null);
+
+  const [filePathCarRegFront, setFilePathCarRegFront] = useState(null);
+  const [filePathCarRegBack, setFilePathCarRegBack] = useState(null);
+
+  const [visibleCarImageBack, setVisibleCarImageBack] = useState(null);
+  const [visibleCarImageFront, setVisibleCarImageFront] = useState(null);
+
+  const [filePathCarImageFront, setFilePathCarImageFront] = useState(null);
+  const [filePathCarImageBack, setFilePathCarImageBack] = useState(null);
+
+  // ---------------------------------------------------------------------------------------------
+
+  const [filePathCarPhotoFront, setFilePathCarPhotoFront] = useState(null);
+  const [filePathCarPhotoBack, setFilePathCarPhotoBack] = useState(null);
+
+  const [visibleCarPhotoFront, setVisibleCarPhotoFront] = useState(null);
+  const [visibleCarPhotoBack, setVisibleCarPhotoBack] = useState(null);
+
+  const [filePathCarSideFront, setFilePathCarSideFront] = useState(null);
+  const [filePathCarSideBack, setFilePathCarSideBack] = useState(null);
+
+  const [visibleCarSideFront, setVisibleCarSideFront] = useState(null);
+  const [visibleCarSideBack, setVisibleCarSideBack] = useState(null);
+
+  const [filePathCarInteriorFront, setFilePathCarInteriorFront] =
+    useState(null);
+  const [filePathCarInteriorBack, setFilePathCarInteriorBack] = useState(null);
+
+  const [visibleCarInteriorFront, setVisibleCarInteriorFront] = useState(null);
+  const [visibleCarInteriorBack, setVisibleCarInteriorBack] = useState(null);
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    // setIsLoading(true);
+    // const userData = await _retrieveData('user');
+    // setUser(userData);
+    const userTokenData = await AsyncStorage.getItem('userToken');
+    // console.log('TestUser', userTokenData);
+    setUserToken(userTokenData);
+    // setIsLoading(false);
+  };
+
+  // const getData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem(userToken);
+  //     if (value !== null) {
+  //       // value previously
+  //       console.log('TestUser', value);
+  //     }
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
+
+  const onImageLibraryPressCarPhotoFront = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarPhotoFront(false);
+        setFilePathCarPhotoFront(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarPhotoFront = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarPhotoFront(false);
+        setFilePathCarPhotoFront(source);
+      }
+    });
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
+
+  const onImageLibraryPressCarPhotoBack = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarPhotoBack(false);
+        setFilePathCarPhotoBack(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarPhotoBack = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarPhotoBack(false);
+        setFilePathCarPhotoBack(source);
+      }
+    });
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
+
+  const onImageLibraryPressCarSideFront = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarSideFront(false);
+        setFilePathCarSideFront(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarSideFront = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarSideFront(false);
+        setFilePathCarSideFront(source);
+      }
+    });
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
+
+  const onImageLibraryPressCarSideBack = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarSideBack(false);
+        setFilePathCarSideBack(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarSideBack = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarSideBack(false);
+        setFilePathCarSideBack(source);
+      }
+    });
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////////
+
+  const onImageLibraryPressCarInteriorFront = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarInteriorFront(false);
+        setFilePathCarInteriorFront(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarInteriorFront = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarInteriorFront(false);
+        setFilePathCarInteriorFront(source);
+      }
+    });
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////
+
+  const onImageLibraryPressCarInteriorBack = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarInteriorBack(false);
+        setFilePathCarInteriorBack(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarInteriorBack = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarInteriorBack(false);
+        setFilePathCarInteriorBack(source);
+      }
+    });
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////////
+
+  const onImageLibraryPressCarImageBack = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarImageBack(false);
+        setFilePathCarImageBack(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarImageBack = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarImageBack(false);
+        setFilePathCarImageBack(source);
+      }
+    });
+  }, []);
+
+  //////////////////////////////////////////////////////////////////
+
+  const onImageLibraryPressCarImageFront = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarImageFront(false);
+        setFilePathCarImageFront(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarImageFront = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarImageFront(false);
+        setVisibleCarImageFront(source);
+      }
+    });
+  }, []);
+
+  ///////////////////////////////////////////////////////////////////
+
+  const onImageLibraryPressCarRegFront = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarRegFront(false);
+        setFilePathCarRegFront(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarRegFront = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarRegFront(false);
+        setFilePathCarRegFront(source);
+      }
+    });
+  }, []);
+
+  const onImageLibraryPressCarRegBack = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleCarRegBack(false);
+        setFilePathCarRegBack(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressCarRegBack = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleCarRegBack(false);
+        setFilePathCarRegBack(source);
+      }
+    });
+  }, []);
+
+  const onImageLibraryPressInsBack = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleInsBack(false);
+        setFilePathInsBack(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressInsBack = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleInsBack(false);
+        setFilePathInsBack(source);
+      }
+    });
+  }, []);
+
+  const onImageLibraryPressInsFront = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleInsBack(false);
+        setFilePathInsFront(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressInsFront = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('', response);
+        setVisibleDlBack(false);
+        setFilePathInsFront(source);
+      }
+    });
+  }, []);
+
+  const onImageLibraryPressBack = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleDlBack(false);
+        setFilePathDlBack(source);
+      }
+    });
+  }, []);
+
+  const onCameraPressBack = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+
+        console.log('', response);
+        setVisibleDlBack(false);
+        setFilePathDlBack(source);
+      }
+    });
+  }, []);
+
+  const onImageLibraryPress = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchImageLibrary(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('You can also display the image using data====>', response);
+        setVisibleDlFront(false);
+        setFilePathDlFront(source);
+      }
+    });
+  }, []);
+
+  const onCameraPress = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+
+        console.log('', response);
+        setVisibleDlFront(false);
+        setFilePathDlFront(source);
+      }
+    });
+  }, []);
+
+  const handleSubmit = async () => {
+    //     const body = {
+    //     "photo_car_back":image file,
+    //     "photo_car_front" : image file,
+    //     "car_interior_front" : image file,
+    //     "car_interior_back" : image file,
+    //     "car_side1" : image file,
+    //     "car_side2" : image file,
+    //     "vehicle_type" : id of list vehicle
+    // }
+    if (filePathDlFront == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload driving Licence Front image',
+      });
+    } else if (filePathDlBack == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload driving Licence Back image',
+      });
+    } else if (filePathInsFront == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload Front Insurance image  ',
+      });
+    } else if (filePathInsBack == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload Back Insurance image',
+      });
+    } else if (filePathCarRegFront == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car registration front image ',
+      });
+    } else if (filePathCarRegBack == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload registration back image',
+      });
+    } else if (filePathCarImageFront == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car front registration image',
+      });
+    } else if (filePathCarImageBack == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car back registration image',
+      });
+    } else if (filePathCarPhotoFront == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car doc front image',
+      });
+    } else if (filePathCarPhotoBack == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car doc back image',
+      });
+    }
+    // ------------------------------------------------------------------------------------
+    else if (filePathCarSideFront == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car front number image',
+      });
+    } else if (filePathCarSideBack == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car back number image',
+      });
+    } else if (filePathCarSideFront == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car front number image',
+      });
+    } else if (filePathCarSideBack == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car back number image',
+      });
+    } else if (filePathCarPhotoFront == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car doc front image',
+      });
+    } else if (filePathCarPhotoBack == null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please upload car doc back image',
+      });
+    }
+    // ------------------------------------------------------------------------------------
+    // filePathCarPhotoFront
+    else {
+      let formdata = new FormData();
+
+      formdata.append('licence_front', {
+        uri: filePathDlFront.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('licence_front', {
+        uri: filePathDlBack.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('insurance_front', {
+        uri: filePathInsFront.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('insurance_back', {
+        uri: filePathInsBack.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+
+      formdata.append('car_registration_front', {
+        uri: filePathCarRegFront.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('car_registration_back', {
+        uri: filePathCarRegBack.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+
+      formdata.append('car_image_number_front', {
+        uri: filePathCarImageFront.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('car_image_number_back', {
+        uri: filePathCarImageBack.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      /////..............................
+      formdata.append('photo_car_front', {
+        uri: filePathCarPhotoFront.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('photo_car_back', {
+        uri: filePathCarPhotoBack.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      /////..............................
+      formdata.append('car_side1', {
+        uri: filePathCarSideFront.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('car_side2', {
+        uri: filePathCarSideBack.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+
+      /////..............................
+      formdata.append('car_interior_front', {
+        uri: filePathCarInteriorFront.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('car_interior_back', {
+        uri: filePathCarInteriorBack.assets[0].uri,
+        name: 'image.jpg',
+        type: 'image/jpeg',
+      });
+      formdata.append('vehicle_type', 'testing');
+
+      const data = AsyncStorage.getItem('@user');
+      // const driver = JSON.parse(data);
+      // console.log('formdata=====>', JSON.stringify(formdata), userToken);
+      var myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'multipart/form-data');
+      myHeaders.append('Accept', 'application/json');
+      myHeaders.append(
+        'Authorization',
+        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjg0YmRjZWI4YjIyYmI0M2I0OTBjMzY3YjI2MzcwOTZmODlkYTdlNTQxOWI2YjY1YzU2ZTRiMjM3NDJkMDE2MWU2MDNlYWRmZDQ1Nzg1NGQiLCJpYXQiOjE2MzcxMzUzODUsIm5iZiI6MTYzNzEzNTM4NSwiZXhwIjoxNjY4NjcxMzgyLCJzdWIiOiIyIiwic2NvcGVzIjpbImRyaXZlciJdfQ.bNO3MPh1MhrZVFGDjoF9Kj7Bgy7Nob7GLL2-VGBTL__3Vo0EU4VK9LgJ0KeWC0y_w3eCGbbbGbKnAOHPKVk8PTIUirT8BBQOlzjuaUrVgWu8kOMOLGHsxvwfkUT4X7bOvByKi_oTyLfvHnctl2XeHE2hLA2ggV87pkxDrp1PtmPsb3SrbJ3h02wdvDVCirq0bon5JF15dlnDqrP6gQH4-0kogcKe4BkY3WE6iai9YX9qcGy2N-gliS25Nobhs9dfD4t6wBNdiZJiPb2ZN6AA5Syhh_FeNzVDUYp0uKWnv1HkbV_AgJ16Sb58nwiCljgjlYZeo2TvCRREadU0PVNcJW4qxmQjigZNpsmIDQ3ByhMA_GFhWuduuVeJo65EpkCHJ1UfcAEaxI3N5ZK4hH_nETNE6N0xB2GBP3jQahQCL-3NeztEnn9rT8tTFuG5xkeayxUtQ_8ScSdv60RPxmlEnw5krkVrELfnIiZGuRWZV--3eHjIPH4eDM9Zy27k9SpO8diaEhpiJgEj0pJNeOOvnTatfVNCJ2xaT9KCbgZ-1vZaclLCUrhpYBxrVFvMC_cBn7oSSEMLiEjSzYtewE_lAFsuUMdlfAwWypeT2o2UMC2j45dwOkOBS-TQFnNcSkNa00n5CDDBFjpeEqYspyCyRnwHzSt-sNuyB-STe4q4Aw4',
+      );
+
+      fetch('http://kabou.us/api/driver/update-docs', {
+        method: 'post',
+        headers: myHeaders,
+        body: JSON.stringify(formdata),
+      })
+        .then(response => {
+          const res = JSON.stringify(response);
+          if (res.status == 200) {
+          } else {
+          }
+          console.log('image uploaded================>', response);
+        })
+        .catch(err => {
+          console.log(
+            'error block --------------------------------------------------------------------------------------------------------------------->',
+            err,
+          );
+        });
     }
   };
 
@@ -153,11 +1177,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleDlFront}
+                      onClose={() => setVisibleDlFront(false)}
+                      onImageLibraryPress={onImageLibraryPress}
+                      onCameraPress={onCameraPress}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleDlFront(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -184,11 +1215,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleDlBack}
+                      onClose={() => setVisibleDlBack(false)}
+                      onImageLibraryPress={onImageLibraryPressBack}
+                      onCameraPress={onCameraPressBack}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleDlBack(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -219,16 +1257,22 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-
                     <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
+
+                    <ImagePickerModal
+                      isVisible={visibleInsFront}
+                      onClose={() => setVisibleInsFront(false)}
+                      onImageLibraryPress={onImageLibraryPressInsFront}
+                      onCameraPress={onCameraPressInsFront}
+                    />
 
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleInsFront(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -255,11 +1299,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleInsBack}
+                      onClose={() => setVisibleInsBack(false)}
+                      onImageLibraryPress={onImageLibraryPressInsBack}
+                      onCameraPress={onCameraPressInsBack}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleInsBack(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -296,11 +1347,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleCarRegFront}
+                      onClose={() => setVisibleCarRegFront(false)}
+                      onImageLibraryPress={onImageLibraryPressCarRegFront}
+                      onCameraPress={onCameraPressCarRegFront}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleCarRegFront(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -327,11 +1385,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleCarRegBack}
+                      onClose={() => setVisibleCarRegBack(false)}
+                      onImageLibraryPress={onImageLibraryPressCarRegBack}
+                      onCameraPress={onCameraPressCarRegBack}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleCarRegBack(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -368,11 +1433,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleCarImageFront}
+                      onClose={() => setVisibleCarImageFront(false)}
+                      onImageLibraryPress={onImageLibraryPressCarImageFront}
+                      onCameraPress={onCameraPressCarImageFront}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleCarImageFront(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -399,11 +1471,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleCarImageBack}
+                      onClose={() => setVisibleCarImageBack(false)}
+                      onImageLibraryPress={onImageLibraryPressCarImageBack}
+                      onCameraPress={onCameraPressCarImageBack}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleCarImageBack(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -441,11 +1520,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleCarPhotoFront}
+                      onClose={() => setVisibleCarPhotoFront(false)}
+                      onImageLibraryPress={onImageLibraryPressCarPhotoFront}
+                      onCameraPress={onCameraPressCarPhotoFront}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleCarPhotoFront(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -472,76 +1558,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
-                    <TouchableOpacity
-                      style={{
-                        width: '100%',
-                      }}
-                      onPress={() => DocumentPickerFun()}>
-                      <View style={styles.buttonStyle}>
-                        <Text style={styles.buttonTextStyle}>Select File</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-
-                <View style={styles.rowParentView}>
-                  <View style={styles.rowChildView}>
-                    <View
-                      style={{
-                        backgroundColor: '#E9E9E9',
-                        borderRadius: 25,
-                        height: 40,
-                        width: 40,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <IconMaterialCommunityIcons
-                        color={'#909090'}
-                        size={24}
-                        name={'upload'}
-                      />
-                    </View>
-
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
-                      Image file to upload
-                    </Text>
+                    <ImagePickerModal
+                      isVisible={visibleCarPhotoBack}
+                      onClose={() => setVisibleCarPhotoBack(false)}
+                      onImageLibraryPress={onImageLibraryPressCarPhotoBack}
+                      onCameraPress={onCameraPressCarPhotoBack}
+                    />
 
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
-                      <View style={styles.buttonStyle}>
-                        <Text style={styles.buttonTextStyle}>Select File</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.rowChildView}>
-                    <View
-                      style={{
-                        backgroundColor: '#E9E9E9',
-                        borderRadius: 25,
-                        height: 40,
-                        width: 40,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <IconMaterialCommunityIcons
-                        color={'#909090'}
-                        size={24}
-                        name={'upload'}
-                      />
-                    </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
-                      Image file to upload
-                    </Text>
-
-                    <TouchableOpacity
-                      style={{
-                        width: '100%',
-                      }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleCarPhotoBack(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -571,11 +1599,18 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleCarInteriorFront}
+                      onClose={() => setVisibleCarInteriorFront(false)}
+                      onImageLibraryPress={onImageLibraryPressCarInteriorFront}
+                      onCameraPress={onCameraPressCarInteriorFront}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleCarInteriorFront(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -602,11 +1637,97 @@ export default documentUpload = ({navigation}) => {
                       Image file to upload
                     </Text>
 
+                    <ImagePickerModal
+                      isVisible={visibleCarInteriorBack}
+                      onClose={() => setVisibleCarInteriorBack(false)}
+                      onImageLibraryPress={onImageLibraryPressCarInteriorBack}
+                      onCameraPress={onCameraPressCarInteriorBack}
+                    />
+
                     <TouchableOpacity
                       style={{
                         width: '100%',
                       }}
-                      onPress={() => DocumentPickerFun()}>
+                      onPress={() => setVisibleCarInteriorBack(true)}>
+                      <View style={styles.buttonStyle}>
+                        <Text style={styles.buttonTextStyle}>Select File</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <View style={styles.rowParentView}>
+                  <View style={styles.rowChildView}>
+                    <View
+                      style={{
+                        backgroundColor: '#E9E9E9',
+                        borderRadius: 25,
+                        height: 40,
+                        width: 40,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <IconMaterialCommunityIcons
+                        color={'#909090'}
+                        size={24}
+                        name={'upload'}
+                      />
+                    </View>
+
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                      Image file to upload
+                    </Text>
+
+                    <ImagePickerModal
+                      isVisible={visibleCarSideFront}
+                      onClose={() => setVisibleCarSideFront(false)}
+                      onImageLibraryPress={onImageLibraryPressCarSideFront}
+                      onCameraPress={onCameraPressCarSideFront}
+                    />
+
+                    <TouchableOpacity
+                      style={{
+                        width: '100%',
+                      }}
+                      onPress={() => setVisibleCarSideFront(true)}>
+                      <View style={styles.buttonStyle}>
+                        <Text style={styles.buttonTextStyle}>Select File</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.rowChildView}>
+                    <View
+                      style={{
+                        backgroundColor: '#E9E9E9',
+                        borderRadius: 25,
+                        height: 40,
+                        width: 40,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <IconMaterialCommunityIcons
+                        color={'#909090'}
+                        size={24}
+                        name={'upload'}
+                      />
+                    </View>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                      Image file to upload
+                    </Text>
+
+                    <ImagePickerModal
+                      isVisible={visibleCarSideBack}
+                      onClose={() => setVisibleCarSideBack(false)}
+                      onImageLibraryPress={onImageLibraryPressCarSideBack}
+                      onCameraPress={onCameraPressCarSideBack}
+                    />
+
+                    <TouchableOpacity
+                      style={{
+                        width: '100%',
+                      }}
+                      onPress={() => setVisibleCarSideBack(true)}>
                       <View style={styles.buttonStyle}>
                         <Text style={styles.buttonTextStyle}>Select File</Text>
                       </View>
@@ -616,7 +1737,8 @@ export default documentUpload = ({navigation}) => {
               </View>
               <TouchableOpacity
                 style={{width: '100%', margin: 15, paddingHorizontal: 15}}
-                onPress={() => navigation.navigate('account')}>
+                //onPress={() => navigation.navigate('account')}
+                onPress={handleSubmit}>
                 <View style={[styles.buttonStyle, {height: buttonHeight}]}>
                   <Text style={[styles.buttonTextStyle, {fontSize: 18}]}>
                     Submit
