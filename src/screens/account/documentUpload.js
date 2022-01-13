@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -29,18 +29,19 @@ import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 import DocumentPicker from 'react-native-document-picker';
-import {ImagePickerModal} from './../../Components/image-picker-modal';
+import { ImagePickerModal } from './../../Components/image-picker-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import axios from 'axios';
 
 // import ImagePicker from 'react-native-image-picker';
 
 // import * as ImagePicker from 'react-native-image-picker';
 
-export default documentUpload = ({navigation}) => {
+export default documentUpload = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -1003,7 +1004,7 @@ export default documentUpload = ({navigation}) => {
         name: 'image.jpg',
         type: 'image/jpeg',
       });
-      formdata.append('licence_front', {
+      formdata.append('license_back', {
         uri: filePathDlBack.assets[0].uri,
         name: 'image.jpg',
         type: 'image/jpeg',
@@ -1074,42 +1075,53 @@ export default documentUpload = ({navigation}) => {
         name: 'image.jpg',
         type: 'image/jpeg',
       });
-      formdata.append('vehicle_type', 'testing');
+      formdata.append('vehicle_type', '1');
 
-      const data = AsyncStorage.getItem('@user');
+      const data = AsyncStorage.getItem('userToken');
       // const driver = JSON.parse(data);
-      // console.log('formdata=====>', JSON.stringify(formdata), userToken);
-      var myHeaders = new Headers();
-      myHeaders.append('Content-Type', 'multipart/form-data');
-      myHeaders.append('Accept', 'application/json');
-      myHeaders.append(
-        'Authorization',
-        'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjg0YmRjZWI4YjIyYmI0M2I0OTBjMzY3YjI2MzcwOTZmODlkYTdlNTQxOWI2YjY1YzU2ZTRiMjM3NDJkMDE2MWU2MDNlYWRmZDQ1Nzg1NGQiLCJpYXQiOjE2MzcxMzUzODUsIm5iZiI6MTYzNzEzNTM4NSwiZXhwIjoxNjY4NjcxMzgyLCJzdWIiOiIyIiwic2NvcGVzIjpbImRyaXZlciJdfQ.bNO3MPh1MhrZVFGDjoF9Kj7Bgy7Nob7GLL2-VGBTL__3Vo0EU4VK9LgJ0KeWC0y_w3eCGbbbGbKnAOHPKVk8PTIUirT8BBQOlzjuaUrVgWu8kOMOLGHsxvwfkUT4X7bOvByKi_oTyLfvHnctl2XeHE2hLA2ggV87pkxDrp1PtmPsb3SrbJ3h02wdvDVCirq0bon5JF15dlnDqrP6gQH4-0kogcKe4BkY3WE6iai9YX9qcGy2N-gliS25Nobhs9dfD4t6wBNdiZJiPb2ZN6AA5Syhh_FeNzVDUYp0uKWnv1HkbV_AgJ16Sb58nwiCljgjlYZeo2TvCRREadU0PVNcJW4qxmQjigZNpsmIDQ3ByhMA_GFhWuduuVeJo65EpkCHJ1UfcAEaxI3N5ZK4hH_nETNE6N0xB2GBP3jQahQCL-3NeztEnn9rT8tTFuG5xkeayxUtQ_8ScSdv60RPxmlEnw5krkVrELfnIiZGuRWZV--3eHjIPH4eDM9Zy27k9SpO8diaEhpiJgEj0pJNeOOvnTatfVNCJ2xaT9KCbgZ-1vZaclLCUrhpYBxrVFvMC_cBn7oSSEMLiEjSzYtewE_lAFsuUMdlfAwWypeT2o2UMC2j45dwOkOBS-TQFnNcSkNa00n5CDDBFjpeEqYspyCyRnwHzSt-sNuyB-STe4q4Aw4',
-      );
+      console.log('formdata=====>', data);
+      const api = "http://kabou.us/api/driver/update-docs";
 
-      fetch('http://kabou.us/api/driver/update-docs', {
-        method: 'post',
-        headers: myHeaders,
-        body: JSON.stringify(formdata),
+      axios({
+        url: api,
+        method: 'POST',
+        data: formdata,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjg0YmRjZWI4YjIyYmI0M2I0OTBjMzY3YjI2MzcwOTZmODlkYTdlNTQxOWI2YjY1YzU2ZTRiMjM3NDJkMDE2MWU2MDNlYWRmZDQ1Nzg1NGQiLCJpYXQiOjE2MzcxMzUzODUsIm5iZiI6MTYzNzEzNTM4NSwiZXhwIjoxNjY4NjcxMzgyLCJzdWIiOiIyIiwic2NvcGVzIjpbImRyaXZlciJdfQ.bNO3MPh1MhrZVFGDjoF9Kj7Bgy7Nob7GLL2-VGBTL__3Vo0EU4VK9LgJ0KeWC0y_w3eCGbbbGbKnAOHPKVk8PTIUirT8BBQOlzjuaUrVgWu8kOMOLGHsxvwfkUT4X7bOvByKi_oTyLfvHnctl2XeHE2hLA2ggV87pkxDrp1PtmPsb3SrbJ3h02wdvDVCirq0bon5JF15dlnDqrP6gQH4-0kogcKe4BkY3WE6iai9YX9qcGy2N-gliS25Nobhs9dfD4t6wBNdiZJiPb2ZN6AA5Syhh_FeNzVDUYp0uKWnv1HkbV_AgJ16Sb58nwiCljgjlYZeo2TvCRREadU0PVNcJW4qxmQjigZNpsmIDQ3ByhMA_GFhWuduuVeJo65EpkCHJ1UfcAEaxI3N5ZK4hH_nETNE6N0xB2GBP3jQahQCL-3NeztEnn9rT8tTFuG5xkeayxUtQ_8ScSdv60RPxmlEnw5krkVrELfnIiZGuRWZV--3eHjIPH4eDM9Zy27k9SpO8diaEhpiJgEj0pJNeOOvnTatfVNCJ2xaT9KCbgZ-1vZaclLCUrhpYBxrVFvMC_cBn7oSSEMLiEjSzYtewE_lAFsuUMdlfAwWypeT2o2UMC2j45dwOkOBS-TQFnNcSkNa00n5CDDBFjpeEqYspyCyRnwHzSt-sNuyB-STe4q4Aw4'
+        }
       })
-        .then(response => {
-          const res = JSON.stringify(response);
-          if (res.status == 200) {
-          } else {
-          }
-          console.log('image uploaded================>', response);
+        .then(function (response) {
+          console.log("response :", response);
         })
-        .catch(err => {
-          console.log(
-            'error block --------------------------------------------------------------------------------------------------------------------->',
-            err,
-          );
-        });
+        .catch(function (error) {
+          console.log("error from image :", error);
+        })
+
+      // fetch('http://kabou.us/api/driver/update-docs', {
+      //   method: 'post',
+      //   headers: myHeaders,
+      //   body: formdata,
+      // })
+      //   .then(response => {
+      //     const res = JSON.stringify(response);
+      //     if (res.status == 200) {
+      //     } else {
+      //     }
+      //     console.log('image uploaded================>', response);
+      //   })
+      //   .catch(err => {
+      //     console.log(
+      //       'error block --------------------------------------------------------------------------------------------------------------------->',
+      //       err,
+      //     );
+      //   });
     }
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={styles.container}>
         {/* <View style={styles.viewOne}>
 
@@ -1125,20 +1137,20 @@ export default documentUpload = ({navigation}) => {
           }}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={{flexDirection: 'row', alignItems: 'center'}}>
+            style={{ flexDirection: 'row', alignItems: 'center' }}>
             <IconAntDesign
               color={colors.headerText}
               size={24}
               name={'arrowleft'}
             />
-            <Text style={[styles.subText, {fontWeight: 'bold', fontSize: 18}]}>
+            <Text style={[styles.subText, { fontWeight: 'bold', fontSize: 18 }]}>
               {'   '}Documentation
             </Text>
           </TouchableOpacity>
         </View>
         <ScrollView
-          style={{flex: 1, marginTop: 60}}
-          contentContainerStyle={{flexGrow: 1}}>
+          style={{ flex: 1, marginTop: 60 }}
+          contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.viewTwo}>
             <View
               style={{
@@ -1173,7 +1185,7 @@ export default documentUpload = ({navigation}) => {
                       />
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1211,7 +1223,7 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1257,7 +1269,7 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1295,7 +1307,7 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1343,7 +1355,7 @@ export default documentUpload = ({navigation}) => {
                       />
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1381,7 +1393,7 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1429,7 +1441,7 @@ export default documentUpload = ({navigation}) => {
                       />
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1467,7 +1479,7 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1491,7 +1503,7 @@ export default documentUpload = ({navigation}) => {
                 </View>
               </View>
 
-              <View style={[styles.singleItemStyle, {borderBottomWidth: 0}]}>
+              <View style={[styles.singleItemStyle, { borderBottomWidth: 0 }]}>
                 <Text style={styles.headerText}>Car Other Images</Text>
                 <Text style={styles.subText}>
                   Car Image Front & Back number, Interior 1 & Interior 2, Side
@@ -1516,7 +1528,7 @@ export default documentUpload = ({navigation}) => {
                       />
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1554,7 +1566,7 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1595,7 +1607,7 @@ export default documentUpload = ({navigation}) => {
                       />
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1633,7 +1645,7 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1674,7 +1686,7 @@ export default documentUpload = ({navigation}) => {
                       />
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1712,7 +1724,7 @@ export default documentUpload = ({navigation}) => {
                         name={'upload'}
                       />
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1736,11 +1748,11 @@ export default documentUpload = ({navigation}) => {
                 </View>
               </View>
               <TouchableOpacity
-                style={{width: '100%', margin: 15, paddingHorizontal: 15}}
+                style={{ width: '100%', margin: 15, paddingHorizontal: 15 }}
                 //onPress={() => navigation.navigate('account')}
                 onPress={handleSubmit}>
-                <View style={[styles.buttonStyle, {height: buttonHeight}]}>
-                  <Text style={[styles.buttonTextStyle, {fontSize: 18}]}>
+                <View style={[styles.buttonStyle, { height: buttonHeight }]}>
+                  <Text style={[styles.buttonTextStyle, { fontSize: 18 }]}>
                     Submit
                   </Text>
                 </View>

@@ -110,7 +110,7 @@ export default signIn = ({navigation}) => {
             navigation.navigate('documentUpload');
             console.log(
               '  AsyncStorage.setItem( JSON.stringify(content.data));',
-              AsyncStorage.getItem('user'),
+              AsyncStorage.getItem('userToken'),
             );
           }, 1000);
 
