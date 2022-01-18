@@ -36,10 +36,7 @@ import { ImagePickerModal } from './../../Components/image-picker-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
-
-// import ImagePicker from 'react-native-image-picker';
-
-// import * as ImagePicker from 'react-native-image-picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 export default documentUpload = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -52,6 +49,34 @@ export default documentUpload = ({ navigation }) => {
   const [focusEmail, setFocusEmail] = useState(false);
 
   const [focusPassword, setFocusPassword] = useState(false);
+
+  const [vehicleData, setVehicleData] = useState(null)
+
+  const [vehicle, setVehicle] = useState('')
+
+
+  useEffect(() => {
+
+    var config = {
+      method: 'get',
+      url: 'http://kabou.us/api/driver/listVehicle'
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        setVehicleData(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [])
+
+  console.log('vehicleData=====>', vehicleData);
+
+
+
+
 
   const showHidePasswordFun = () => {
     setShowHide(!showHide);
@@ -151,13 +176,10 @@ export default documentUpload = ({ navigation }) => {
   }, []);
 
   const fetchUser = async () => {
-    // setIsLoading(true);
-    // const userData = await _retrieveData('user');
-    // setUser(userData);
-    const userTokenData = await AsyncStorage.getItem('userToken');
-    // console.log('TestUser', userTokenData);
-    setUserToken(userTokenData);
-    // setIsLoading(false);
+    const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
+    if (token) {
+      setUserToken(token);
+    }
   };
 
   // const getData = async () => {
@@ -1075,7 +1097,7 @@ export default documentUpload = ({ navigation }) => {
         name: 'image.jpg',
         type: 'image/jpeg',
       });
-      formdata.append('vehicle_type', '1');
+      formdata.append('vehicle_type', vehicle.id);
 
       const data = AsyncStorage.getItem('userToken');
       // const driver = JSON.parse(data);
@@ -1089,7 +1111,7 @@ export default documentUpload = ({ navigation }) => {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'multipart/form-data',
-          'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjg0YmRjZWI4YjIyYmI0M2I0OTBjMzY3YjI2MzcwOTZmODlkYTdlNTQxOWI2YjY1YzU2ZTRiMjM3NDJkMDE2MWU2MDNlYWRmZDQ1Nzg1NGQiLCJpYXQiOjE2MzcxMzUzODUsIm5iZiI6MTYzNzEzNTM4NSwiZXhwIjoxNjY4NjcxMzgyLCJzdWIiOiIyIiwic2NvcGVzIjpbImRyaXZlciJdfQ.bNO3MPh1MhrZVFGDjoF9Kj7Bgy7Nob7GLL2-VGBTL__3Vo0EU4VK9LgJ0KeWC0y_w3eCGbbbGbKnAOHPKVk8PTIUirT8BBQOlzjuaUrVgWu8kOMOLGHsxvwfkUT4X7bOvByKi_oTyLfvHnctl2XeHE2hLA2ggV87pkxDrp1PtmPsb3SrbJ3h02wdvDVCirq0bon5JF15dlnDqrP6gQH4-0kogcKe4BkY3WE6iai9YX9qcGy2N-gliS25Nobhs9dfD4t6wBNdiZJiPb2ZN6AA5Syhh_FeNzVDUYp0uKWnv1HkbV_AgJ16Sb58nwiCljgjlYZeo2TvCRREadU0PVNcJW4qxmQjigZNpsmIDQ3ByhMA_GFhWuduuVeJo65EpkCHJ1UfcAEaxI3N5ZK4hH_nETNE6N0xB2GBP3jQahQCL-3NeztEnn9rT8tTFuG5xkeayxUtQ_8ScSdv60RPxmlEnw5krkVrELfnIiZGuRWZV--3eHjIPH4eDM9Zy27k9SpO8diaEhpiJgEj0pJNeOOvnTatfVNCJ2xaT9KCbgZ-1vZaclLCUrhpYBxrVFvMC_cBn7oSSEMLiEjSzYtewE_lAFsuUMdlfAwWypeT2o2UMC2j45dwOkOBS-TQFnNcSkNa00n5CDDBFjpeEqYspyCyRnwHzSt-sNuyB-STe4q4Aw4'
+          'Authorization': `Bearer ${userToken}`
         }
       })
         .then(function (response) {
@@ -1136,7 +1158,7 @@ export default documentUpload = ({ navigation }) => {
             alignItems: 'center',
           }}>
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            // onPress={() => navigation.goBack()}
             style={{ flexDirection: 'row', alignItems: 'center' }}>
             <IconAntDesign
               color={colors.headerText}
@@ -1246,6 +1268,67 @@ export default documentUpload = ({ navigation }) => {
                   </View>
                 </View>
               </View>
+
+              <View style={{ marginHorizontal: 20, marginTop: 20 }}>
+                {
+                  vehicleData && vehicleData != null ?
+                    <RNPickerSelect
+                      style={{
+                        ...pickerSelectStyles,
+                        iconContainer: {
+                          top: 20,
+                          right: 10,
+                          color: "#fff",
+                          backgroundColor: "#fff"
+                        },
+                        placeholder: {
+                          color: "grey",
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        },
+                      }}
+                      placeholderTextColor={"#fff"}
+                      placeholder={{
+                        label: 'Select vehicle',
+                        value: null,
+                        color: 'grey'
+                      }}
+                      value={vehicle}
+                      onValueChange={(value) => setVehicle(value)}
+                      items={vehicleData.vehicle}
+                    />
+                    :
+                    null
+                }
+                {/* <RNPickerSelect
+                  style={{
+                    ...pickerSelectStyles,
+                    iconContainer: {
+                      top: 20,
+                      right: 10,
+                      color: "#fff",
+                      backgroundColor: "#fff"
+                    },
+                    placeholder: {
+                      color: "grey",
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    },
+                  }}
+                  placeholderTextColor={"#fff"}
+                  placeholder={{
+                    label: 'Select vehicle',
+                    value: null,
+                    color: 'grey'
+                  }}
+                  value={vehicle}
+                  onValueChange={(value) => setVehicle(value)}
+                  // items={vehicleData.vehicle}
+                /> */}
+
+
+              </View>
+
               <View style={styles.singleItemStyle}>
                 <Text style={styles.headerText}>Insurance Doc</Text>
                 <Text style={styles.subText}>
@@ -1764,6 +1847,31 @@ export default documentUpload = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: "#fff",
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    fontSize: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: "#DDDDDD",
+    borderRadius: 8,
+    color: "#DDDDDD",
+    // color: 'black',
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+});
+
+
 
 const styles = StyleSheet.create({
   container: {

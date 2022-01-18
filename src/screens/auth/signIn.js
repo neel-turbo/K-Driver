@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -25,7 +25,7 @@ import IconFeather from 'react-native-vector-icons/dist/Feather';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default signIn = ({navigation}) => {
+export default signIn = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -75,7 +75,6 @@ export default signIn = ({navigation}) => {
       };
       (async () => {
         const rawResponse = await fetch(
-          // 'http://mydevfactory.com/~devserver/kabou/api/driver/login',
           'http://kabou.us/api/driver/login',
           {
             method: 'POST',
@@ -87,36 +86,20 @@ export default signIn = ({navigation}) => {
           },
         );
         const content = await rawResponse.json();
-        console.log('testinggggggggggggggg', content.data.driver);
+
         if (content.data) {
+          console.log('testinggggggggggggggg', content.data);
           Toast.show({
             type: 'success',
             text1: content.message,
           });
-          // storeData();
-          // storeData('userToken', content.data.token);
-          //AsyncStorage.setItem('user', JSON.stringify(content.data.driver));
-          AsyncStorage.setItem('userToken', content.data.token);
-          // const Utoken = content.data.token;
-          // const storeUserData = async Utoken => {
-          //   try {
-          //     await AsyncStorage.setItem('userToken', Utoken);
-          //   } catch (e) {
-          //     // saving error
-          //   }
-          // };
+          try {
+            AsyncStorage.setItem('userToken', JSON.stringify(content.data));
+          } catch (error) {}
 
           setTimeout(() => {
             navigation.navigate('documentUpload');
-            console.log(
-              '  AsyncStorage.setItem( JSON.stringify(content.data));',
-              AsyncStorage.getItem('userToken'),
-            );
           }, 1000);
-
-          // navigation.navigate('userVerification', {userEmail: email});
-          //  navigation.navigate('documentUpload');
-          // navigation.navigate('../account/documentUpload');
         } else {
           Toast.show({
             type: 'error',
@@ -128,8 +111,8 @@ export default signIn = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
-      <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>
           {/* <View style={styles.viewOne}>
 
@@ -249,7 +232,7 @@ export default signIn = ({navigation}) => {
                 )}
               </View>
               <TouchableOpacity
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 // onPress={() => navigation.navigate('')}>
                 onPress={() => handlesubmit()}>
                 <View style={styles.buttonStyle}>
@@ -260,7 +243,7 @@ export default signIn = ({navigation}) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate('forgetPassword')}>
                 <Text
-                  style={[styles.subText, {fontSize: 16, marginVertical: 30}]}>
+                  style={[styles.subText, { fontSize: 16, marginVertical: 30 }]}>
                   Forget Password?
                 </Text>
               </TouchableOpacity>
@@ -268,16 +251,16 @@ export default signIn = ({navigation}) => {
           </View>
 
           <View style={styles.viewThree}>
-            <View style={{padding: allPadding, flex: 1}}>
+            <View style={{ padding: allPadding, flex: 1 }}>
               <View
                 style={{
                   justifyContent: 'flex-end',
                   alignItems: 'center',
                   flex: 1,
                 }}>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                   <Text
-                    style={[styles.subText, {fontSize: 16, marginVertical: 0}]}>
+                    style={[styles.subText, { fontSize: 16, marginVertical: 0 }]}>
                     Don't have an account?
                   </Text>
                   <TouchableOpacity

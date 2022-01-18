@@ -2,8 +2,29 @@ import React, {Component, useEffect, useState} from 'react';
 import {Text, View, StyleSheet, SafeAreaView, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {logoHeight, logoWidth} from '../../utils/comon';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default splashScreen = ({navigation, route}) => {
+
+
+  useEffect(async () => {
+    const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
+    if(token){
+      setTimeout(() => {
+        navigation.navigate('documentUpload');
+      }, 1000);
+    }else{
+      setTimeout(() => {
+        navigation.navigate('signIn');
+      }, 1000);
+    }
+
+    console.log('react native--->', token)
+  }, [])
+
+
+
   useEffect(() => {
     setTimeout(() => {
       navigation.navigate('signIn');

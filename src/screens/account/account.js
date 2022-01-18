@@ -108,6 +108,14 @@ export default account = ({navigation}) => {
   const onBlurTextInputCPassword = () => {
     setFocusCPassword(false);
   };
+  const [userData, setUserData] = useState(null)
+
+  useEffect(async() => {
+    const data = JSON.parse(await AsyncStorage.getItem('userToken'))
+    setUserData(data)
+  }, [])
+
+
   // ----------------------------------------------------------------------------------------------------
 
   const handlesubmit = () => {
@@ -137,8 +145,7 @@ export default account = ({navigation}) => {
         text1: 'Please enter your Zip ',
       });
     } else {
-      const body = {
-        // email: email,
+      const body = {        
         name: name,
         cellphone: mobile,
         street: street,
@@ -147,7 +154,6 @@ export default account = ({navigation}) => {
       };
       (async () => {
         const rawResponse = await fetch(
-          // 'http://mydevfactory.com/~devserver/kabou/api/driver/update-profile',
           'http://kabou.us/api/driver/update-profile',
           {
             method: 'POST',
@@ -166,7 +172,6 @@ export default account = ({navigation}) => {
             type: 'success',
             text1: content.message,
           });
-          // navigation.navigate('userVerification', {userEmail: email});
           console.log('hellllluuuuuuuuuuuuuu');
         } else {
           Toast.show({
@@ -210,14 +215,12 @@ export default account = ({navigation}) => {
       } else {
         let source = response;
         console.log(response);
-        // You can also display the image using data:
-        // let source = {
-        //   uri: 'data:image/jpeg;base64,' + response.data
-        // };
         setFilePath(source);
       }
     });
   };
+
+  console.log('userData========>', userData);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
