@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -25,7 +25,7 @@ import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Toast from 'react-native-toast-message';
 
-export default userVerification = ({navigation, route}) => {
+export default userVerification = ({ navigation, route }) => {
   const [digitOne, setDigitOne] = useState('');
   const [digitTwo, setDigitTwo] = useState('');
   const [digitThree, setDigitThree] = useState('');
@@ -122,8 +122,14 @@ export default userVerification = ({navigation, route}) => {
             type: 'success',
             text1: content.message,
           });
-          // navigation.navigate('userVerification');
-          navigation.navigate('documentUpload');
+
+          setTimeout(() => {
+            try {
+              AsyncStorage.setItem('userToken', JSON.stringify(content.data));
+            } catch (error) { }
+
+            navigation.navigate('documentUpload');
+          }, 1000);
         } else {
           Toast.show({
             type: 'error',
@@ -135,8 +141,8 @@ export default userVerification = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
-      <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>
           {/* <View style={styles.viewOne}>
 
@@ -151,14 +157,14 @@ export default userVerification = ({navigation, route}) => {
             }}>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
-              style={{flexDirection: 'row', alignItems: 'center'}}>
+              style={{ flexDirection: 'row', alignItems: 'center' }}>
               <IconAntDesign
                 color={colors.headerText}
                 size={24}
                 name={'arrowleft'}
               />
               <Text
-                style={[styles.subText, {fontWeight: 'bold', fontSize: 18}]}>
+                style={[styles.subText, { fontWeight: 'bold', fontSize: 18 }]}>
                 {'   '}Back
               </Text>
             </TouchableOpacity>
@@ -183,11 +189,11 @@ export default userVerification = ({navigation, route}) => {
                 source={require('../../asserts/logo.png')}
               />
               <Text style={styles.headerText}>Verification Code</Text>
-              <Text style={[styles.subText, {marginVertical: 0}]}>
+              <Text style={[styles.subText, { marginVertical: 0 }]}>
                 Please type verification code send
               </Text>
               <Text
-                style={[styles.subText, {marginVertical: 0, marginBottom: 15}]}>
+                style={[styles.subText, { marginVertical: 0, marginBottom: 15 }]}>
                 to +917225373909
               </Text>
 
@@ -265,15 +271,15 @@ export default userVerification = ({navigation, route}) => {
               <TouchableOpacity
                 // onPress={() => navigation.navigate('documentUpload')}
                 onPress={() => handlesubmit()}
-                style={{width: '100%'}}>
+                style={{ width: '100%' }}>
                 <View style={styles.buttonStyle}>
                   <Text style={styles.buttonTextStyle}>Submit</Text>
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={{width: '100%'}}>
+              <TouchableOpacity style={{ width: '100%' }}>
                 <Text
-                  style={[styles.subText, {fontSize: 18, marginVertical: 30}]}>
+                  style={[styles.subText, { fontSize: 18, marginVertical: 30 }]}>
                   Resend
                 </Text>
               </TouchableOpacity>

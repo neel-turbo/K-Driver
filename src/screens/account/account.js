@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -19,21 +19,17 @@ import {
   logoHeight,
   logoWidth,
 } from '../../utils/comon';
-import IconFontisto from 'react-native-vector-icons/dist/Fontisto';
-import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
-import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
 import IconIonicons from 'react-native-vector-icons/dist/Ionicons';
 import IconSimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons';
 import IconEntypo from 'react-native-vector-icons/dist/Entypo';
-
-import CheckBox from '@react-native-community/checkbox';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import axios from 'axios';
+import { ImagePickerModal } from './../../Components/image-picker-modal';
 
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-
-export default account = ({navigation}) => {
+export default account = ({ navigation }) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const [name, setName] = useState('');
@@ -110,9 +106,14 @@ export default account = ({navigation}) => {
   };
   const [userData, setUserData] = useState(null)
 
-  useEffect(async() => {
+  useEffect(async () => {
     const data = JSON.parse(await AsyncStorage.getItem('userToken'))
-    setUserData(data)
+    if (data) {
+      setUserData(data)
+      setName(data.driver.name)
+      setMobile(data.driver.cellphone)
+    }
+
   }, [])
 
 
@@ -145,14 +146,16 @@ export default account = ({navigation}) => {
         text1: 'Please enter your Zip ',
       });
     } else {
-      const body = {        
+      const body = {
         name: name,
         cellphone: mobile,
         street: street,
         city: city,
         zip: zip,
       };
+
       (async () => {
+        const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
         const rawResponse = await fetch(
           'http://kabou.us/api/driver/update-profile',
           {
@@ -160,6 +163,7 @@ export default account = ({navigation}) => {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(body),
           },
@@ -170,9 +174,9 @@ export default account = ({navigation}) => {
         if (content.success) {
           Toast.show({
             type: 'success',
-            text1: content.message,
+            text1: content.success,
           });
-          console.log('hellllluuuuuuuuuuuuuu');
+          console.log('hellllluuuuuuuuuuuuuu', content);
         } else {
           Toast.show({
             type: 'error',
@@ -185,23 +189,15 @@ export default account = ({navigation}) => {
 
   // --------------------Profile image upload here---------------------------------------------------
 
-  const [filePath, setFilePath] = useState({});
-  const chooseFile = () => {
-    let options = {
-      title: 'Select Image',
-      customButtons: [
-        {
-          name: 'customOptionKey',
-          title: 'Choose Photo from Custom Option',
-        },
-      ],
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    // launchCamera(options, callback); launchImageLibrary
+  const [filePath, setFilePath] = useState("");
+  const [visible, setVisible] = useState(false);
 
+  const onImageLibraryPress = React.useCallback(() => {
+    const options = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
     launchImageLibrary(options, response => {
       console.log('Response = ', response);
 
@@ -214,16 +210,87 @@ export default account = ({navigation}) => {
         alert(response.customButton);
       } else {
         let source = response;
-        console.log(response);
+        setVisible(false);
+        updateUserProfile(source.assets[0].uri)
         setFilePath(source);
       }
     });
-  };
+  }, []);
+
+  const onCameraPress = React.useCallback(() => {
+    const options = {
+      saveToPhotos: true,
+      mediaType: 'photo',
+      includeBase64: false,
+    };
+    launchCamera(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        console.log('source------------->', source);
+        setVisible(false);
+        setFilePath(source);
+
+        updateUserProfile(source.assets[0].uri)
+      }
+    });
+  }, []);
+
+
+  const updateUserProfile = async (value) => {
+    let formdata = new FormData();
+    console.log('userData.token--->', userData);
+
+    formdata.append('profile_photo', {
+      uri: value,
+      name: 'image.jpg',
+      type: 'image/jpeg',
+    });
+    const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
+
+    const api = "http://kabou.us/api/driver/update-profile-picture";
+
+    axios({
+      url: api,
+      method: 'POST',
+      data: formdata,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(function (response) {
+        if (response.data) {
+          Toast.show({
+            type: 'success',
+            text1: response.data.success,
+          });
+        }
+        console.log("response :", response);
+      })
+      .catch(function (error) {
+        console.log("error from image :", error);
+      })
+
+
+
+  }
+
+
 
   console.log('userData========>', userData);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={styles.container}>
         {/* <View style={styles.viewOne}>
 
@@ -240,18 +307,18 @@ export default account = ({navigation}) => {
           }}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={{flexDirection: 'row', alignItems: 'center'}}>
+            style={{ flexDirection: 'row', alignItems: 'center' }}>
             <IconAntDesign
               color={colors.headerText}
               size={24}
               name={'arrowleft'}
             />
-            <Text style={[styles.subText, {fontWeight: 'bold', fontSize: 18}]}>
+            <Text style={[styles.subText, { fontWeight: 'bold', fontSize: 18 }]}>
               {'   '}Edit Profile
             </Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.viewTwo}>
             <View
               style={{
@@ -272,7 +339,7 @@ export default account = ({navigation}) => {
                   style={{
                     borderRadius: 78,
                   }}>
-                  <Image
+                  {filePath ? <Image
                     style={{
                       height: 128,
                       width: 128,
@@ -282,8 +349,21 @@ export default account = ({navigation}) => {
                       borderColor: colors.buttonColor,
                       borderWidth: 2,
                     }}
-                    source={require('../../asserts/user.jpeg')}
+                    source={{ uri: filePath.assets[0].uri }}
                   />
+                    :
+                    <Image
+                      style={{
+                        height: 128,
+                        width: 128,
+                        resizeMode: 'cover',
+                        overflow: 'hidden',
+                        borderRadius: 78,
+                        borderColor: colors.buttonColor,
+                        borderWidth: 2,
+                      }}
+                      source={require('../../asserts/user.jpeg')}
+                    />}
                   <TouchableOpacity
                     style={{
                       position: 'absolute',
@@ -294,21 +374,30 @@ export default account = ({navigation}) => {
                       borderRadius: 30,
                       elevation: 10,
                     }}
-                    onPress={() => chooseFile()}>
+                    onPress={() => setVisible(true)}>
                     <IconEntypo color={'#003169'} size={24} name={'camera'} />
                   </TouchableOpacity>
+
+
+
+                  <ImagePickerModal
+                    isVisible={visible}
+                    onClose={() => setVisible(false)}
+                    onImageLibraryPress={onImageLibraryPress}
+                    onCameraPress={onCameraPress}
+                  />
                 </View>
 
                 <Text
                   style={[
                     styles.headerText,
-                    {marginVertical: 0, fontSize: 18, marginTop: 15},
+                    { marginVertical: 0, fontSize: 18, marginTop: 15 },
                   ]}>
-                  Jhon Deo
+                  {userData ? userData.driver.name : ''}
                 </Text>
                 <Text
-                  style={[styles.subText, {marginVertical: 0, fontSize: 18}]}>
-                  JhonDeo123@gmail.com
+                  style={[styles.subText, { marginVertical: 0, fontSize: 18 }]}>
+                  {userData ? userData.driver.email : ''}
                 </Text>
               </View>
 
@@ -340,7 +429,7 @@ export default account = ({navigation}) => {
                   onChangeText={text => setName(text)}
                 />
                 <TouchableOpacity>
-                  <Text style={{color: colors.cardBorder}}>Edit</Text>
+                  <Text style={{ color: colors.cardBorder }}>Edit</Text>
                 </TouchableOpacity>
               </View>
 
@@ -373,7 +462,7 @@ export default account = ({navigation}) => {
                   onChangeText={text => setMobile(text)}
                 />
                 <TouchableOpacity>
-                  <Text style={{color: colors.cardBorder}}>Edit</Text>
+                  <Text style={{ color: colors.cardBorder }}>Edit</Text>
                 </TouchableOpacity>
               </View>
 
@@ -467,7 +556,7 @@ export default account = ({navigation}) => {
               </View>
               {/* handlesubmit */}
               <TouchableOpacity
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 // onPress={() => navigation.navigate('')}>
                 onPress={() => handlesubmit()}>
                 <View style={styles.buttonStyle}>
@@ -476,11 +565,11 @@ export default account = ({navigation}) => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 onPress={() => navigation.navigate('')}>
                 <View
-                  style={[styles.buttonStyle, {backgroundColor: '#F5F5F5'}]}>
-                  <Text style={[styles.buttonTextStyle, {color: '#7A7C80'}]}>
+                  style={[styles.buttonStyle, { backgroundColor: '#F5F5F5' }]}>
+                  <Text style={[styles.buttonTextStyle, { color: '#7A7C80' }]}>
                     Change Password
                   </Text>
                 </View>
