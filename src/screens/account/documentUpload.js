@@ -76,7 +76,7 @@ export default documentUpload = ({ navigation }) => {
       });
   }, [])
 
-  console.log('vehicleData=====>', JSON.stringify(vehicleData))
+  console.log('vehicleData=====>', userToken)
 
 
 
@@ -935,15 +935,56 @@ export default documentUpload = ({ navigation }) => {
   }, []);
 
   const handleSubmit = async () => {
-    //     const body = {
-    //     "photo_car_back":image file,
-    //     "photo_car_front" : image file,
-    //     "car_interior_front" : image file,
-    //     "car_interior_back" : image file,
-    //     "car_side1" : image file,
-    //     "car_side2" : image file,
-    //     "vehicle_type" : id of list vehicle
-    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     if (filePathDlFront == null) {
       Toast.show({
         type: 'error',
@@ -1032,7 +1073,7 @@ export default documentUpload = ({ navigation }) => {
     else {
       let formdata = new FormData();
 
-      formdata.append('licence_front', {
+      formdata.append("licence_front", {
         uri: filePathDlFront.assets[0].uri,
         name: 'image.jpg',
         type: 'image/jpeg',
@@ -1113,33 +1154,113 @@ export default documentUpload = ({ navigation }) => {
       console.log('formdata=====>', formdata, vehicle);
       const api = "http://kabou.us/api/driver/update-docs";
 
-      axios({
-        url: api,
+
+
+
+
+      var myHeaders = new Headers();
+      myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZWJkMmU5ZjgwYTg4YTNiYTE3ZmM5ZmMxOGQwNzE3MzI4MDZkNDQxNDA0MWFhNGUzMjg3MDc2YzA2YmU3NzBjYTRmZGU1YzA2Njk3NWFiNDYiLCJpYXQiOjE2NDI2NDY2MzIsIm5iZiI6MTY0MjY0NjYzMiwiZXhwIjoxNjc0MTgyNjMyLCJzdWIiOiI1NCIsInNjb3BlcyI6WyJkcml2ZXIiXX0.Kk7TcOc4blcoEAZuTYBkPW8gcSJCAY6PxczMVZWk_D9SFTjPiqpqyPHuVKRVgkqp5EYalPXiuL2ZtbK_K1u59rdxQAVpoxzBbxzN4I8udHGwasO085FZUDRxA8ariq9OBYvyATpdM7-Fpz5-_h-xWrFrjqF0UbPoKPiRBNiD_rWk2fEZi-LFE_zO6W3fxlOZwkNJCtBxC8OF95iS9Oo-Miwk7Gi9ExiemcUjSgLihpHl9at-C8ck-NOpueHtp3RSNtjBS6x03nHMUmnYow417eFfw1u7EKa4LybRPSaljamzHFIItDND-o0I2a4q_hmZ6zRQ6ey-RFMRbzURxj3148wKitt74Di4UJUG-EyOxLZUWEmG50U3WwDLnKjETzN6PGzFVpLRdqsz_eIlCUWzMgJ14T3BukGh-OWuDW0N9NVnhekHQJEbWr49bQg0QZuHc0fgO0tSh-bBRhBWXhE_oZy0GRtV-nZU8vlqmxbbmikFhq4N1uQEEXyeI-kPdVqOjnfX9fdoeupZAPnG0VhSiwDEenrweuekCQrfy0cp71d0pvDvteo-i3HXyO_tGqwbvL2i6fTp7K4kCN6WCAVYWxiEPoTVCcLDa-ETYXEUuwj1dIz3N8_BqTbcyc2uvsmj68d9hBDV9Mm4yEshm7xJunziL6aOVTxlniM2Of-_b2Q");
+
+
+      var requestOptions = {
         method: 'POST',
-        data: formdata,
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${userToken}`
-        }
-      })
-        .then(function (response) {
-          if (response.data) {
+        headers: myHeaders,
+        body: formdata,
+        redirect: 'follow'
+      };
+      setTimeout(() => {
+        fetch("http://kabou.us/api/driver/update-docs", requestOptions)
+          .then(response => response.text())
+          .then(result => {
+            if (result) {
+              console.log('result================>', result);
+              setTimeout(() => {
+                navigation.navigate('account');
+              }, 2000);
+            }
+          })
+          .catch(error => console.log('error', error));
 
-            Toast.show({
-              type: 'success',
-              text1: response.data.message,
-            });
+      }, 1000);
 
-            setTimeout(() => {
-              navigation.navigate('account');
-            }, 1000);
-          }
-          console.log("response :", response);
-        })
-        .catch(function (error) {
-          console.log("error from image :", error);
-        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // axios({
+      //   url: api,
+      //   method: 'POST',
+      //   data: formdata,
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type':'multipart/form-data',
+      //     'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZWJkMmU5ZjgwYTg4YTNiYTE3ZmM5ZmMxOGQwNzE3MzI4MDZkNDQxNDA0MWFhNGUzMjg3MDc2YzA2YmU3NzBjYTRmZGU1YzA2Njk3NWFiNDYiLCJpYXQiOjE2NDI2NDY2MzIsIm5iZiI6MTY0MjY0NjYzMiwiZXhwIjoxNjc0MTgyNjMyLCJzdWIiOiI1NCIsInNjb3BlcyI6WyJkcml2ZXIiXX0.Kk7TcOc4blcoEAZuTYBkPW8gcSJCAY6PxczMVZWk_D9SFTjPiqpqyPHuVKRVgkqp5EYalPXiuL2ZtbK_K1u59rdxQAVpoxzBbxzN4I8udHGwasO085FZUDRxA8ariq9OBYvyATpdM7-Fpz5-_h-xWrFrjqF0UbPoKPiRBNiD_rWk2fEZi-LFE_zO6W3fxlOZwkNJCtBxC8OF95iS9Oo-Miwk7Gi9ExiemcUjSgLihpHl9at-C8ck-NOpueHtp3RSNtjBS6x03nHMUmnYow417eFfw1u7EKa4LybRPSaljamzHFIItDND-o0I2a4q_hmZ6zRQ6ey-RFMRbzURxj3148wKitt74Di4UJUG-EyOxLZUWEmG50U3WwDLnKjETzN6PGzFVpLRdqsz_eIlCUWzMgJ14T3BukGh-OWuDW0N9NVnhekHQJEbWr49bQg0QZuHc0fgO0tSh-bBRhBWXhE_oZy0GRtV-nZU8vlqmxbbmikFhq4N1uQEEXyeI-kPdVqOjnfX9fdoeupZAPnG0VhSiwDEenrweuekCQrfy0cp71d0pvDvteo-i3HXyO_tGqwbvL2i6fTp7K4kCN6WCAVYWxiEPoTVCcLDa-ETYXEUuwj1dIz3N8_BqTbcyc2uvsmj68d9hBDV9Mm4yEshm7xJunziL6aOVTxlniM2Of-_b2Q'
+      //   }
+      // })
+      //   .then(function (response) {
+      //     if (response.data) {
+
+      //       Toast.show({
+      //         type: 'success',
+      //         text1: response.data.message,
+      //       });
+
+      //       setTimeout(() => {
+      //         navigation.navigate('account');
+      //       }, 1000);
+      //     }
+      //     console.log("response :", response);
+      //   })
+      //   .catch(function (error) {
+      //     console.log("error from image :", error);
+      //   })
 
     }
   };

@@ -12,7 +12,7 @@ export default splashScreen = ({navigation, route}) => {
     const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
     if(token){
       setTimeout(() => {
-        navigation.navigate('account');
+        navigation.navigate('documentUpload');
       }, 1000);
     }else{
       setTimeout(() => {
