@@ -21,7 +21,7 @@ export function ImagePickerModal({
       <SafeAreaView style={styles.buttons}>
         <Pressable style={styles.button} onPress={onImageLibraryPress}>
           <EvilIcons size={50} color={'gray'} name="image" />
-          <Text style={styles.buttonText}>Library</Text>
+          <Text style={styles.buttonText}>Galary</Text>
         </Pressable>
         <Pressable style={styles.button} onPress={onCameraPress}>
           <AntDesign size={40} color={'gray'} name="camera" />

@@ -4,32 +4,25 @@ import LinearGradient from 'react-native-linear-gradient';
 import {logoHeight, logoWidth} from '../../utils/comon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 export default splashScreen = ({navigation, route}) => {
-
-
   useEffect(async () => {
-    const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
-    if(token){
+    const {token} = JSON.parse(await AsyncStorage.getItem('userToken'));
+    if (token) {
       setTimeout(() => {
         navigation.navigate('documentUpload');
       }, 1000);
-    }else{
+    } else {
       setTimeout(() => {
         navigation.navigate('signIn');
       }, 1000);
     }
-
-    console.log('react native--->', token)
-  }, [])
-
-
-
-  useEffect(() => {
-    setTimeout(() => {
-      navigation.navigate('signIn');
-    }, 1000);
   }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     navigation.navigate('signIn');
+  //   }, 1000);
+  // }, []);
 
   return (
     <SafeAreaView style={{flex: 1}}>

@@ -114,7 +114,8 @@ export default setPassword = ({navigation, route}) => {
             text1: content.message,
           });
           // navigation.navigate('userVerification', {userEmail: email});
-          navigation.navigate('');
+          // navigation.navigate('');
+          navigation.navigate('signIn');
         } else {
           Toast.show({
             type: 'error',

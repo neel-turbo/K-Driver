@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -28,17 +28,17 @@ import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 
-import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
+import Entypo from 'react-native-vector-icons/dist/Entypo';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
-import { ImagePickerModal } from './../../Components/image-picker-modal';
+import {ImagePickerModal} from './../../Components/image-picker-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import RNPickerSelect from 'react-native-picker-select';
 
-export default documentUpload = ({ navigation }) => {
+export default documentUpload = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -50,37 +50,31 @@ export default documentUpload = ({ navigation }) => {
 
   const [focusPassword, setFocusPassword] = useState(false);
 
-  const [vehicleData, setVehicleData] = useState(null)
+  const [vehicleData, setVehicleData] = useState(null);
 
-  const [vehicle, setVehicle] = useState('')
-
+  const [vehicle, setVehicle] = useState('');
 
   useEffect(() => {
-
     var config = {
       method: 'get',
-      url: 'http://kabou.us/api/driver/listVehicle'
+      url: 'http://kabou.us/api/driver/listVehicle',
     };
 
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
-        var data = response.data.vehicle.map((item) => {
-          return { label: item.name, value: item.id }
-        })
+        var data = response.data.vehicle.map(item => {
+          return {label: item.name, value: item.id};
+        });
         // { label: 'Football', value: 'football' },
-        setVehicleData(data)
+        setVehicleData(data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, [])
+  }, []);
 
-  console.log('vehicleData=====>', userToken)
-
-
-
-
+  console.log('vehicleData=====>', JSON.stringify(vehicleData));
 
   const showHidePasswordFun = () => {
     setShowHide(!showHide);
@@ -146,7 +140,6 @@ export default documentUpload = ({ navigation }) => {
   const [filePathCarRegFront, setFilePathCarRegFront] = useState(null);
   const [filePathCarRegBack, setFilePathCarRegBack] = useState(null);
 
-
   const [visibleCarImageBack, setVisibleCarImageBack] = useState(null);
   const [visibleCarImageFront, setVisibleCarImageFront] = useState(null);
 
@@ -154,10 +147,6 @@ export default documentUpload = ({ navigation }) => {
   const [filePathCarImageBack, setFilePathCarImageBack] = useState(null);
 
   ////////////////////////////////////////
-
-
-
-
 
   // ---------------------------------------------------------------------------------------------
 
@@ -187,7 +176,7 @@ export default documentUpload = ({ navigation }) => {
   }, []);
 
   const fetchUser = async () => {
-    const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
+    const {token} = JSON.parse(await AsyncStorage.getItem('userToken'));
     if (token) {
       setUserToken(token);
     }
@@ -935,56 +924,15 @@ export default documentUpload = ({ navigation }) => {
   }, []);
 
   const handleSubmit = async () => {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //     const body = {
+    //     "photo_car_back":image file,
+    //     "photo_car_front" : image file,
+    //     "car_interior_front" : image file,
+    //     "car_interior_back" : image file,
+    //     "car_side1" : image file,
+    //     "car_side2" : image file,
+    //     "vehicle_type" : id of list vehicle
+    // }
     if (filePathDlFront == null) {
       Toast.show({
         type: 'error',
@@ -1073,7 +1021,7 @@ export default documentUpload = ({ navigation }) => {
     else {
       let formdata = new FormData();
 
-      formdata.append("licence_front", {
+      formdata.append('licence_front', {
         uri: filePathDlFront.assets[0].uri,
         name: 'image.jpg',
         type: 'image/jpeg',
@@ -1151,122 +1099,41 @@ export default documentUpload = ({ navigation }) => {
       });
       formdata.append('vehicle_type', vehicle);
       // const driver = JSON.parse(data);
-      console.log('formdata=====>', formdata, vehicle);
-      const api = "http://kabou.us/api/driver/update-docs";
+      // console.log(JSON.stringfy, 'formdata=====>', formdata, vehicle);
+      console.log('formdata=====>', JSON.stringify(formdata));
+      const api = 'http://kabou.us/api/driver/update-docs';
 
-
-
-
-
-      var myHeaders = new Headers();
-      myHeaders.append("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZWJkMmU5ZjgwYTg4YTNiYTE3ZmM5ZmMxOGQwNzE3MzI4MDZkNDQxNDA0MWFhNGUzMjg3MDc2YzA2YmU3NzBjYTRmZGU1YzA2Njk3NWFiNDYiLCJpYXQiOjE2NDI2NDY2MzIsIm5iZiI6MTY0MjY0NjYzMiwiZXhwIjoxNjc0MTgyNjMyLCJzdWIiOiI1NCIsInNjb3BlcyI6WyJkcml2ZXIiXX0.Kk7TcOc4blcoEAZuTYBkPW8gcSJCAY6PxczMVZWk_D9SFTjPiqpqyPHuVKRVgkqp5EYalPXiuL2ZtbK_K1u59rdxQAVpoxzBbxzN4I8udHGwasO085FZUDRxA8ariq9OBYvyATpdM7-Fpz5-_h-xWrFrjqF0UbPoKPiRBNiD_rWk2fEZi-LFE_zO6W3fxlOZwkNJCtBxC8OF95iS9Oo-Miwk7Gi9ExiemcUjSgLihpHl9at-C8ck-NOpueHtp3RSNtjBS6x03nHMUmnYow417eFfw1u7EKa4LybRPSaljamzHFIItDND-o0I2a4q_hmZ6zRQ6ey-RFMRbzURxj3148wKitt74Di4UJUG-EyOxLZUWEmG50U3WwDLnKjETzN6PGzFVpLRdqsz_eIlCUWzMgJ14T3BukGh-OWuDW0N9NVnhekHQJEbWr49bQg0QZuHc0fgO0tSh-bBRhBWXhE_oZy0GRtV-nZU8vlqmxbbmikFhq4N1uQEEXyeI-kPdVqOjnfX9fdoeupZAPnG0VhSiwDEenrweuekCQrfy0cp71d0pvDvteo-i3HXyO_tGqwbvL2i6fTp7K4kCN6WCAVYWxiEPoTVCcLDa-ETYXEUuwj1dIz3N8_BqTbcyc2uvsmj68d9hBDV9Mm4yEshm7xJunziL6aOVTxlniM2Of-_b2Q");
-
-
-      var requestOptions = {
+      axios({
+        url: api,
         method: 'POST',
-        headers: myHeaders,
-        body: formdata,
-        redirect: 'follow'
-      };
-      setTimeout(() => {
-        fetch("http://kabou.us/api/driver/update-docs", requestOptions)
-          .then(response => response.text())
-          .then(result => {
-            if (result) {
-              console.log('result================>', result);
-              setTimeout(() => {
-                navigation.navigate('account');
-              }, 2000);
-            }
-          })
-          .catch(error => console.log('error', error));
+        data: formdata,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
+        .then(function (response) {
+          if (response.data) {
+            Toast.show({
+              type: 'success',
+              text1: response.data.message,
+            });
 
-      }, 1000);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      // axios({
-      //   url: api,
-      //   method: 'POST',
-      //   data: formdata,
-      //   headers: {
-      //     Accept: 'application/json',
-      //     'Content-Type':'multipart/form-data',
-      //     'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiZWJkMmU5ZjgwYTg4YTNiYTE3ZmM5ZmMxOGQwNzE3MzI4MDZkNDQxNDA0MWFhNGUzMjg3MDc2YzA2YmU3NzBjYTRmZGU1YzA2Njk3NWFiNDYiLCJpYXQiOjE2NDI2NDY2MzIsIm5iZiI6MTY0MjY0NjYzMiwiZXhwIjoxNjc0MTgyNjMyLCJzdWIiOiI1NCIsInNjb3BlcyI6WyJkcml2ZXIiXX0.Kk7TcOc4blcoEAZuTYBkPW8gcSJCAY6PxczMVZWk_D9SFTjPiqpqyPHuVKRVgkqp5EYalPXiuL2ZtbK_K1u59rdxQAVpoxzBbxzN4I8udHGwasO085FZUDRxA8ariq9OBYvyATpdM7-Fpz5-_h-xWrFrjqF0UbPoKPiRBNiD_rWk2fEZi-LFE_zO6W3fxlOZwkNJCtBxC8OF95iS9Oo-Miwk7Gi9ExiemcUjSgLihpHl9at-C8ck-NOpueHtp3RSNtjBS6x03nHMUmnYow417eFfw1u7EKa4LybRPSaljamzHFIItDND-o0I2a4q_hmZ6zRQ6ey-RFMRbzURxj3148wKitt74Di4UJUG-EyOxLZUWEmG50U3WwDLnKjETzN6PGzFVpLRdqsz_eIlCUWzMgJ14T3BukGh-OWuDW0N9NVnhekHQJEbWr49bQg0QZuHc0fgO0tSh-bBRhBWXhE_oZy0GRtV-nZU8vlqmxbbmikFhq4N1uQEEXyeI-kPdVqOjnfX9fdoeupZAPnG0VhSiwDEenrweuekCQrfy0cp71d0pvDvteo-i3HXyO_tGqwbvL2i6fTp7K4kCN6WCAVYWxiEPoTVCcLDa-ETYXEUuwj1dIz3N8_BqTbcyc2uvsmj68d9hBDV9Mm4yEshm7xJunziL6aOVTxlniM2Of-_b2Q'
-      //   }
-      // })
-      //   .then(function (response) {
-      //     if (response.data) {
-
-      //       Toast.show({
-      //         type: 'success',
-      //         text1: response.data.message,
-      //       });
-
-      //       setTimeout(() => {
-      //         navigation.navigate('account');
-      //       }, 1000);
-      //     }
-      //     console.log("response :", response);
-      //   })
-      //   .catch(function (error) {
-      //     console.log("error from image :", error);
-      //   })
-
+            setTimeout(() => {
+              navigation.navigate('account');
+            }, 1000);
+          }
+          console.log('response :', response);
+        })
+        .catch(function (error) {
+          console.log('error from image :', error);
+        });
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
       <View style={styles.container}>
         {/* <View style={styles.viewOne}>
 
@@ -1281,21 +1148,21 @@ export default documentUpload = ({ navigation }) => {
             alignItems: 'center',
           }}>
           <TouchableOpacity
-            // onPress={() => navigation.goBack()}
-            style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <IconAntDesign
+            onPress={() => navigation.toggleDrawer()}
+            style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Entypo
               color={colors.headerText}
               size={24}
-              name={'arrowleft'}
+              name={'menu'}
             />
-            <Text style={[styles.subText, { fontWeight: 'bold', fontSize: 18 }]}>
+            <Text style={[styles.subText, {fontWeight: 'bold', fontSize: 18}]}>
               {'   '}Documentation
             </Text>
           </TouchableOpacity>
         </View>
         <ScrollView
-          style={{ flex: 1, marginTop: 60 }}
-          contentContainerStyle={{ flexGrow: 1 }}>
+          style={{flex: 1, marginTop: 60}}
+          contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.viewTwo}>
             <View
               style={{
@@ -1323,19 +1190,24 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathDlFront ?
-                        <Image source={{ uri: filePathDlFront.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathDlFront ? (
+                        <Image
+                          source={{uri: filePathDlFront.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
-
+                      )}
                     </View>
 
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1367,17 +1239,23 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathDlBack ?
-                        <Image source={{ uri: filePathDlBack.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathDlBack ? (
+                        <Image
+                          source={{uri: filePathDlBack.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1401,51 +1279,51 @@ export default documentUpload = ({ navigation }) => {
                 </View>
               </View>
 
-              <View style={{ marginHorizontal: 20, flexDirection: 'row', alignItems: 'center', marginTop: 20, width: 360, height: 60, borderRadius: 10, borderBottomColor: 'grey', borderWidth: 1 }}>
-
-                <View style={{ width: 50, padding: 10 }}>
-                  <FontAwesome5
-                    color={"grey"}
-                    size={24}
-                    name={'car-side'}
-                  />
+              <View
+                style={{
+                  marginHorizontal: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 20,
+                  width: 360,
+                  height: 60,
+                  borderRadius: 10,
+                  borderBottomColor: 'grey',
+                  borderWidth: 1,
+                }}>
+                <View style={{width: 50, padding: 10}}>
+                  <FontAwesome5 color={'grey'} size={24} name={'car-side'} />
                 </View>
 
-                <View style={{ width: 310 }}>
-                  {
-                    vehicleData && vehicleData != null ?
-                      <RNPickerSelect
-                        style={{
-                          ...pickerSelectStyles,
-                          iconContainer: {
-                            top: 20,
-                            right: 10,
-                            color: "#fff",
-                            backgroundColor: "#fff"
-                          },
-                          placeholder: {
-                            color: "grey",
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                          },
-                        }}
-                        placeholderTextColor={"#fff"}
-                        placeholder={{
-                          label: 'Select vehicle',
-                          value: null,
-                          color: 'grey'
-                        }}
-                        value={vehicle}
-                        onValueChange={(value) => setVehicle(value)}
-                        items={vehicleData}
-                      />
-                      :
-                      null
-                  }
+                <View style={{width: 310}}>
+                  {vehicleData && vehicleData != null ? (
+                    <RNPickerSelect
+                      style={{
+                        ...pickerSelectStyles,
+                        iconContainer: {
+                          top: 20,
+                          right: 10,
+                          color: '#fff',
+                          backgroundColor: '#fff',
+                        },
+                        placeholder: {
+                          color: 'grey',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        },
+                      }}
+                      placeholderTextColor={'#fff'}
+                      placeholder={{
+                        label: 'Select vehicle',
+                        value: null,
+                        color: 'grey',
+                      }}
+                      value={vehicle}
+                      onValueChange={value => setVehicle(value)}
+                      items={vehicleData}
+                    />
+                  ) : null}
                 </View>
-
-
-
               </View>
 
               <View style={styles.singleItemStyle}>
@@ -1465,17 +1343,23 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathInsFront ?
-                        <Image source={{ uri: filePathInsFront.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathInsFront ? (
+                        <Image
+                          source={{uri: filePathInsFront.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1507,17 +1391,23 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathInsBack ?
-                        <Image source={{ uri: filePathInsBack.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathInsBack ? (
+                        <Image
+                          source={{uri: filePathInsBack.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1558,18 +1448,24 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarRegFront ?
-                        <Image source={{ uri: filePathCarRegFront.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarRegFront ? (
+                        <Image
+                          source={{uri: filePathCarRegFront.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
 
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1601,17 +1497,23 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarRegBack ?
-                        <Image source={{ uri: filePathCarRegBack.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarRegBack ? (
+                        <Image
+                          source={{uri: filePathCarRegBack.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1652,18 +1554,24 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarImageFront ?
-                        <Image source={{ uri: filePathCarImageFront.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarImageFront ? (
+                        <Image
+                          source={{uri: filePathCarImageFront.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
 
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1695,17 +1603,23 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarImageBack ?
-                        <Image source={{ uri: filePathCarImageBack.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarImageBack ? (
+                        <Image
+                          source={{uri: filePathCarImageBack.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1729,7 +1643,7 @@ export default documentUpload = ({ navigation }) => {
                 </View>
               </View>
 
-              <View style={[styles.singleItemStyle, { borderBottomWidth: 0 }]}>
+              <View style={[styles.singleItemStyle, {borderBottomWidth: 0}]}>
                 <Text style={styles.headerText}>Car Other Images</Text>
                 <Text style={styles.subText}>
                   Car Image Front & Back number, Interior 1 & Interior 2, Side
@@ -1747,18 +1661,24 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarPhotoFront ?
-                        <Image source={{ uri: filePathCarPhotoFront.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarPhotoFront ? (
+                        <Image
+                          source={{uri: filePathCarPhotoFront.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
 
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1790,17 +1710,23 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarPhotoBack ?
-                        <Image source={{ uri: filePathCarPhotoBack.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarPhotoBack ? (
+                        <Image
+                          source={{uri: filePathCarPhotoBack.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1834,18 +1760,24 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarInteriorFront ?
-                        <Image source={{ uri: filePathCarInteriorFront.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarInteriorFront ? (
+                        <Image
+                          source={{uri: filePathCarInteriorFront.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
 
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1877,17 +1809,23 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarInteriorBack ?
-                        <Image source={{ uri: filePathCarInteriorBack.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarInteriorBack ? (
+                        <Image
+                          source={{uri: filePathCarInteriorBack.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1921,18 +1859,24 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarSideFront ?
-                        <Image source={{ uri: filePathCarSideFront.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarSideFront ? (
+                        <Image
+                          source={{uri: filePathCarSideFront.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
 
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1964,17 +1908,23 @@ export default documentUpload = ({ navigation }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {filePathCarSideBack ?
-                        <Image source={{ uri: filePathCarSideBack.assets[0].uri }} style={{ width: 45, height: 45, borderRadius: 45 / 2 }}></Image>
-                        :
+                      {filePathCarSideBack ? (
+                        <Image
+                          source={{uri: filePathCarSideBack.assets[0].uri}}
+                          style={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: 45 / 2,
+                          }}></Image>
+                      ) : (
                         <IconMaterialCommunityIcons
                           color={'#909090'}
                           size={24}
                           name={'upload'}
                         />
-                      }
+                      )}
                     </View>
-                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
+                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
                       Image file to upload
                     </Text>
 
@@ -1998,11 +1948,11 @@ export default documentUpload = ({ navigation }) => {
                 </View>
               </View>
               <TouchableOpacity
-                style={{ width: '100%', margin: 15, paddingHorizontal: 15 }}
+                style={{width: '100%', margin: 15, paddingHorizontal: 15}}
                 //onPress={() => navigation.navigate('account')}
                 onPress={handleSubmit}>
-                <View style={[styles.buttonStyle, { height: buttonHeight }]}>
-                  <Text style={[styles.buttonTextStyle, { fontSize: 18 }]}>
+                <View style={[styles.buttonStyle, {height: buttonHeight}]}>
+                  <Text style={[styles.buttonTextStyle, {fontSize: 18}]}>
                     Submit
                   </Text>
                 </View>
@@ -2022,7 +1972,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 4,
-    color: "#fff",
+    color: '#fff',
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroid: {
@@ -2031,15 +1981,13 @@ const pickerSelectStyles = StyleSheet.create({
     paddingVertical: 8,
     borderWidth: 0.5,
     height: 50,
-    borderColor: "#DDDDDD",
+    borderColor: '#DDDDDD',
     borderRadius: 8,
-    color: "#000000",
+    color: '#000000',
     // color: 'black',
     paddingRight: 30, // to ensure the text is never behind the icon
   },
 });
-
-
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -25,11 +25,11 @@ import IconSimpleLineIcons from 'react-native-vector-icons/dist/SimpleLineIcons'
 import IconEntypo from 'react-native-vector-icons/dist/Entypo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import axios from 'axios';
-import { ImagePickerModal } from './../../Components/image-picker-modal';
+import {ImagePickerModal} from './../../Components/image-picker-modal';
 
-export default account = ({ navigation }) => {
+export default account = ({navigation}) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
 
   const [name, setName] = useState('');
@@ -104,18 +104,16 @@ export default account = ({ navigation }) => {
   const onBlurTextInputCPassword = () => {
     setFocusCPassword(false);
   };
-  const [userData, setUserData] = useState(null)
+  const [userData, setUserData] = useState(null);
 
   useEffect(async () => {
-    const data = JSON.parse(await AsyncStorage.getItem('userToken'))
+    const data = JSON.parse(await AsyncStorage.getItem('userToken'));
     if (data) {
-      setUserData(data)
-      setName(data.driver.name)
-      setMobile(data.driver.cellphone)
+      setUserData(data);
+      setName(data.driver.name);
+      setMobile(data.driver.cellphone);
     }
-
-  }, [])
-
+  }, []);
 
   // ----------------------------------------------------------------------------------------------------
 
@@ -155,7 +153,7 @@ export default account = ({ navigation }) => {
       };
 
       (async () => {
-        const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
+        const {token} = JSON.parse(await AsyncStorage.getItem('userToken'));
         const rawResponse = await fetch(
           'http://kabou.us/api/driver/update-profile',
           {
@@ -163,7 +161,7 @@ export default account = ({ navigation }) => {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(body),
           },
@@ -189,7 +187,7 @@ export default account = ({ navigation }) => {
 
   // --------------------Profile image upload here---------------------------------------------------
 
-  const [filePath, setFilePath] = useState("");
+  const [filePath, setFilePath] = useState('');
   const [visible, setVisible] = useState(false);
 
   const onImageLibraryPress = React.useCallback(() => {
@@ -211,7 +209,7 @@ export default account = ({ navigation }) => {
       } else {
         let source = response;
         setVisible(false);
-        updateUserProfile(source.assets[0].uri)
+        updateUserProfile(source.assets[0].uri);
         setFilePath(source);
       }
     });
@@ -239,13 +237,12 @@ export default account = ({ navigation }) => {
         setVisible(false);
         setFilePath(source);
 
-        updateUserProfile(source.assets[0].uri)
+        updateUserProfile(source.assets[0].uri);
       }
     });
   }, []);
 
-
-  const updateUserProfile = async (value) => {
+  const updateUserProfile = async value => {
     let formdata = new FormData();
     console.log('userData.token--->', userData);
 
@@ -254,9 +251,9 @@ export default account = ({ navigation }) => {
       name: 'image.jpg',
       type: 'image/jpeg',
     });
-    const { token } = JSON.parse(await AsyncStorage.getItem('userToken'))
+    const {token} = JSON.parse(await AsyncStorage.getItem('userToken'));
 
-    const api = "http://kabou.us/api/driver/update-profile-picture";
+    const api = 'http://kabou.us/api/driver/update-profile-picture';
 
     axios({
       url: api,
@@ -265,8 +262,8 @@ export default account = ({ navigation }) => {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then(function (response) {
         if (response.data) {
@@ -275,22 +272,17 @@ export default account = ({ navigation }) => {
             text1: response.data.success,
           });
         }
-        console.log("response :", response);
+        console.log('response :', response);
       })
       .catch(function (error) {
-        console.log("error from image :", error);
-      })
-
-
-
-  }
-
-
+        console.log('error from image :', error);
+      });
+  };
 
   console.log('userData========>', userData);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
       <View style={styles.container}>
         {/* <View style={styles.viewOne}>
 
@@ -307,18 +299,18 @@ export default account = ({ navigation }) => {
           }}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={{ flexDirection: 'row', alignItems: 'center' }}>
+            style={{flexDirection: 'row', alignItems: 'center'}}>
             <IconAntDesign
               color={colors.headerText}
               size={24}
               name={'arrowleft'}
             />
-            <Text style={[styles.subText, { fontWeight: 'bold', fontSize: 18 }]}>
+            <Text style={[styles.subText, {fontWeight: 'bold', fontSize: 18}]}>
               {'   '}Edit Profile
             </Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.viewTwo}>
             <View
               style={{
@@ -339,19 +331,20 @@ export default account = ({ navigation }) => {
                   style={{
                     borderRadius: 78,
                   }}>
-                  {filePath ? <Image
-                    style={{
-                      height: 128,
-                      width: 128,
-                      resizeMode: 'cover',
-                      overflow: 'hidden',
-                      borderRadius: 78,
-                      borderColor: colors.buttonColor,
-                      borderWidth: 2,
-                    }}
-                    source={{ uri: filePath.assets[0].uri }}
-                  />
-                    :
+                  {filePath ? (
+                    <Image
+                      style={{
+                        height: 128,
+                        width: 128,
+                        resizeMode: 'cover',
+                        overflow: 'hidden',
+                        borderRadius: 78,
+                        borderColor: colors.buttonColor,
+                        borderWidth: 2,
+                      }}
+                      source={{uri: filePath.assets[0].uri}}
+                    />
+                  ) : (
                     <Image
                       style={{
                         height: 128,
@@ -363,7 +356,8 @@ export default account = ({ navigation }) => {
                         borderWidth: 2,
                       }}
                       source={require('../../asserts/user.jpeg')}
-                    />}
+                    />
+                  )}
                   <TouchableOpacity
                     style={{
                       position: 'absolute',
@@ -378,8 +372,6 @@ export default account = ({ navigation }) => {
                     <IconEntypo color={'#003169'} size={24} name={'camera'} />
                   </TouchableOpacity>
 
-
-
                   <ImagePickerModal
                     isVisible={visible}
                     onClose={() => setVisible(false)}
@@ -391,12 +383,12 @@ export default account = ({ navigation }) => {
                 <Text
                   style={[
                     styles.headerText,
-                    { marginVertical: 0, fontSize: 18, marginTop: 15 },
+                    {marginVertical: 0, fontSize: 18, marginTop: 15},
                   ]}>
                   {userData ? userData.driver.name : ''}
                 </Text>
                 <Text
-                  style={[styles.subText, { marginVertical: 0, fontSize: 18 }]}>
+                  style={[styles.subText, {marginVertical: 0, fontSize: 18}]}>
                   {userData ? userData.driver.email : ''}
                 </Text>
               </View>
@@ -429,7 +421,7 @@ export default account = ({ navigation }) => {
                   onChangeText={text => setName(text)}
                 />
                 <TouchableOpacity>
-                  <Text style={{ color: colors.cardBorder }}>Edit</Text>
+                  <Text style={{color: colors.cardBorder}}>Edit</Text>
                 </TouchableOpacity>
               </View>
 
@@ -462,7 +454,7 @@ export default account = ({ navigation }) => {
                   onChangeText={text => setMobile(text)}
                 />
                 <TouchableOpacity>
-                  <Text style={{ color: colors.cardBorder }}>Edit</Text>
+                  <Text style={{color: colors.cardBorder}}>Edit</Text>
                 </TouchableOpacity>
               </View>
 
@@ -556,7 +548,7 @@ export default account = ({ navigation }) => {
               </View>
               {/* handlesubmit */}
               <TouchableOpacity
-                style={{ width: '100%' }}
+                style={{width: '100%'}}
                 // onPress={() => navigation.navigate('')}>
                 onPress={() => handlesubmit()}>
                 <View style={styles.buttonStyle}>
@@ -564,16 +556,16 @@ export default account = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={{ width: '100%' }}
+              {/* <TouchableOpacity
+                style={{width: '100%'}}
                 onPress={() => navigation.navigate('')}>
                 <View
-                  style={[styles.buttonStyle, { backgroundColor: '#F5F5F5' }]}>
-                  <Text style={[styles.buttonTextStyle, { color: '#7A7C80' }]}>
+                  style={[styles.buttonStyle, {backgroundColor: '#F5F5F5'}]}>
+                  <Text style={[styles.buttonTextStyle, {color: '#7A7C80'}]}>
                     Change Password
                   </Text>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </ScrollView>

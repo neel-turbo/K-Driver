@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Clipboard
 } from 'react-native';
 import colors from '../../asserts/colors.js/colors';
 import {
@@ -19,11 +20,10 @@ import {
   logoHeight,
   logoWidth,
 } from '../../utils/comon';
-import IconFontisto from 'react-native-vector-icons/dist/Fontisto';
-import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
-import IconFeather from 'react-native-vector-icons/dist/Feather';
 import IconAntDesign from 'react-native-vector-icons/dist/AntDesign';
 import Toast from 'react-native-toast-message';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+
 
 export default userVerification = ({ navigation, route }) => {
   const [digitOne, setDigitOne] = useState('');
@@ -85,10 +85,7 @@ export default userVerification = ({ navigation, route }) => {
 
   const handlesubmit = () => {
     if (
-      digitOne == '' &&
-      digitTwo == '' &&
-      digitThree == '' &&
-      digitFour == ''
+      digitOne == ''
     ) {
       // console.warn('abccccccccccc');
       Toast.show({
@@ -128,7 +125,8 @@ export default userVerification = ({ navigation, route }) => {
               AsyncStorage.setItem('userToken', JSON.stringify(content.data));
             } catch (error) { }
 
-            navigation.navigate('documentUpload');
+            // navigation.navigate('documentUpload');
+            navigation.navigate('signIn');
           }, 1000);
         } else {
           Toast.show({
@@ -203,7 +201,24 @@ export default userVerification = ({ navigation, route }) => {
                   justifyContent: 'space-around',
                   width: '100%',
                 }}>
-                <View
+
+                <OTPInputView
+                  style={{ width: '80%', height: 200 }}
+                  pinCount={4}
+                  editable
+                  code={digitOne} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+                  onCodeChanged = {code => { setDigitOne(code)}}
+                  autoFocusOnLoad
+                  codeInputFieldStyle={styles.underlineStyleBase}
+                  codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                  onCodeFilled={(code) => {
+                    console.log(`Code is ${code}, you are good to go!`)
+                  }}
+                />
+
+
+
+                {/* <View
                   style={
                     focusDigitOne === true
                       ? styles.activeBorder
@@ -266,7 +281,7 @@ export default userVerification = ({ navigation, route }) => {
                     onFocus={() => onFocusTextInputDigitFour()}
                     onChangeText={text => setDigitFour(text)}
                   />
-                </View>
+                </View> */}
               </View>
               <TouchableOpacity
                 // onPress={() => navigation.navigate('documentUpload')}
@@ -359,5 +374,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: colors.white,
     textAlign: 'center',
+  },
+  underlineStyleBase: {
+    width: 65,
+    height: 80,
+    borderWidth: 1,
+    color: '#000000',
+    borderRadius: 10,
+    fontSize: 40,
+    borderColor: '#DDDDDD'
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: "#000000",
   },
 });
