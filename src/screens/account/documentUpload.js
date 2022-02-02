@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -23,58 +23,56 @@ import {
   logoHeight,
   logoWidth,
 } from '../../utils/comon';
-import IconFontisto from 'react-native-vector-icons/dist/Fontisto';
-import IconMaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
-
 import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
-
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommunityIcons';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
-import {ImagePickerModal} from './../../Components/image-picker-modal';
+import { ImagePickerModal } from './../../Components/image-picker-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import axios from 'axios';
 import RNPickerSelect from 'react-native-picker-select';
 
-export default documentUpload = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+export default documentUpload = ({ navigation }) => {
 
   const [showHide, setShowHide] = useState(false);
 
   const [showHidePassword, setShowHidePassword] = useState(true);
-
-  const [focusEmail, setFocusEmail] = useState(false);
-
-  const [focusPassword, setFocusPassword] = useState(false);
 
   const [vehicleData, setVehicleData] = useState(null);
 
   const [vehicle, setVehicle] = useState('');
 
   useEffect(() => {
-    var config = {
-      method: 'get',
-      url: 'http://kabou.us/api/driver/listVehicle',
-    };
-
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        var data = response.data.vehicle.map(item => {
-          return {label: item.name, value: item.id};
-        });
-        // { label: 'Football', value: 'football' },
-        setVehicleData(data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    fetch()
+    fetchUser();
+    return null;
   }, []);
 
-  console.log('vehicleData=====>', JSON.stringify(vehicleData));
+  const fetch = async () => {
+    try {
+      var config = {
+        method: 'get',
+        url: 'http://kabou.us/api/driver/listVehicle',
+      };
+
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+          var data = response.data.vehicle.map(item => {
+            return { label: item.name, value: item.id };
+          });
+          setVehicleData(data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } catch (error) {
+
+    }
+  }
+
 
   const showHidePasswordFun = () => {
     setShowHide(!showHide);
@@ -171,28 +169,18 @@ export default documentUpload = ({navigation}) => {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   const fetchUser = async () => {
-    const {token} = JSON.parse(await AsyncStorage.getItem('userToken'));
-    if (token) {
-      setUserToken(token);
+    try {
+      const { token } = JSON.parse(await AsyncStorage.getItem('userToken'));
+      if (token) {
+        setUserToken(token);
+      }
+    } catch (error) {
+
     }
   };
 
-  // const getData = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem(userToken);
-  //     if (value !== null) {
-  //       // value previously
-  //       console.log('TestUser', value);
-  //     }
-  //   } catch (e) {
-  //     // error reading value
-  //   }
-  // };
 
   const onImageLibraryPressCarPhotoFront = React.useCallback(() => {
     const options = {
@@ -1133,7 +1121,7 @@ export default documentUpload = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <View style={styles.container}>
         {/* <View style={styles.viewOne}>
 
@@ -1149,20 +1137,20 @@ export default documentUpload = ({navigation}) => {
           }}>
           <TouchableOpacity
             onPress={() => navigation.toggleDrawer()}
-            style={{flexDirection: 'row', alignItems: 'center'}}>
+            style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Entypo
               color={colors.headerText}
               size={24}
               name={'menu'}
             />
-            <Text style={[styles.subText, {fontWeight: 'bold', fontSize: 18}]}>
+            <Text style={[styles.subText, { fontWeight: 'bold', fontSize: 18 }]}>
               {'   '}Documentation
             </Text>
           </TouchableOpacity>
         </View>
         <ScrollView
-          style={{flex: 1, marginTop: 60}}
-          contentContainerStyle={{flexGrow: 1}}>
+          style={{ flex: 1, marginTop: 60 }}
+          contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.viewTwo}>
             <View
               style={{
@@ -1192,7 +1180,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathDlFront ? (
                         <Image
-                          source={{uri: filePathDlFront.assets[0].uri}}
+                          source={{ uri: filePathDlFront.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1207,7 +1195,7 @@ export default documentUpload = ({navigation}) => {
                       )}
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1241,7 +1229,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathDlBack ? (
                         <Image
-                          source={{uri: filePathDlBack.assets[0].uri}}
+                          source={{ uri: filePathDlBack.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1255,7 +1243,7 @@ export default documentUpload = ({navigation}) => {
                         />
                       )}
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1291,11 +1279,11 @@ export default documentUpload = ({navigation}) => {
                   borderBottomColor: 'grey',
                   borderWidth: 1,
                 }}>
-                <View style={{width: 50, padding: 10}}>
+                <View style={{ width: 50, padding: 10 }}>
                   <FontAwesome5 color={'grey'} size={24} name={'car-side'} />
                 </View>
 
-                <View style={{width: 310}}>
+                <View style={{ width: 310 }}>
                   {vehicleData && vehicleData != null ? (
                     <RNPickerSelect
                       style={{
@@ -1345,7 +1333,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathInsFront ? (
                         <Image
-                          source={{uri: filePathInsFront.assets[0].uri}}
+                          source={{ uri: filePathInsFront.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1359,7 +1347,7 @@ export default documentUpload = ({navigation}) => {
                         />
                       )}
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1393,7 +1381,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathInsBack ? (
                         <Image
-                          source={{uri: filePathInsBack.assets[0].uri}}
+                          source={{ uri: filePathInsBack.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1407,7 +1395,7 @@ export default documentUpload = ({navigation}) => {
                         />
                       )}
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1450,7 +1438,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarRegFront ? (
                         <Image
-                          source={{uri: filePathCarRegFront.assets[0].uri}}
+                          source={{ uri: filePathCarRegFront.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1465,7 +1453,7 @@ export default documentUpload = ({navigation}) => {
                       )}
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1499,7 +1487,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarRegBack ? (
                         <Image
-                          source={{uri: filePathCarRegBack.assets[0].uri}}
+                          source={{ uri: filePathCarRegBack.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1513,7 +1501,7 @@ export default documentUpload = ({navigation}) => {
                         />
                       )}
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1556,7 +1544,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarImageFront ? (
                         <Image
-                          source={{uri: filePathCarImageFront.assets[0].uri}}
+                          source={{ uri: filePathCarImageFront.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1571,7 +1559,7 @@ export default documentUpload = ({navigation}) => {
                       )}
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1605,7 +1593,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarImageBack ? (
                         <Image
-                          source={{uri: filePathCarImageBack.assets[0].uri}}
+                          source={{ uri: filePathCarImageBack.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1619,7 +1607,7 @@ export default documentUpload = ({navigation}) => {
                         />
                       )}
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1643,7 +1631,7 @@ export default documentUpload = ({navigation}) => {
                 </View>
               </View>
 
-              <View style={[styles.singleItemStyle, {borderBottomWidth: 0}]}>
+              <View style={[styles.singleItemStyle, { borderBottomWidth: 0 }]}>
                 <Text style={styles.headerText}>Car Other Images</Text>
                 <Text style={styles.subText}>
                   Car Image Front & Back number, Interior 1 & Interior 2, Side
@@ -1663,7 +1651,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarPhotoFront ? (
                         <Image
-                          source={{uri: filePathCarPhotoFront.assets[0].uri}}
+                          source={{ uri: filePathCarPhotoFront.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1678,7 +1666,7 @@ export default documentUpload = ({navigation}) => {
                       )}
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1712,7 +1700,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarPhotoBack ? (
                         <Image
-                          source={{uri: filePathCarPhotoBack.assets[0].uri}}
+                          source={{ uri: filePathCarPhotoBack.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1726,7 +1714,7 @@ export default documentUpload = ({navigation}) => {
                         />
                       )}
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1762,7 +1750,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarInteriorFront ? (
                         <Image
-                          source={{uri: filePathCarInteriorFront.assets[0].uri}}
+                          source={{ uri: filePathCarInteriorFront.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1777,7 +1765,7 @@ export default documentUpload = ({navigation}) => {
                       )}
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1811,7 +1799,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarInteriorBack ? (
                         <Image
-                          source={{uri: filePathCarInteriorBack.assets[0].uri}}
+                          source={{ uri: filePathCarInteriorBack.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1825,7 +1813,7 @@ export default documentUpload = ({navigation}) => {
                         />
                       )}
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1861,7 +1849,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarSideFront ? (
                         <Image
-                          source={{uri: filePathCarSideFront.assets[0].uri}}
+                          source={{ uri: filePathCarSideFront.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1876,7 +1864,7 @@ export default documentUpload = ({navigation}) => {
                       )}
                     </View>
 
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1910,7 +1898,7 @@ export default documentUpload = ({navigation}) => {
                       }}>
                       {filePathCarSideBack ? (
                         <Image
-                          source={{uri: filePathCarSideBack.assets[0].uri}}
+                          source={{ uri: filePathCarSideBack.assets[0].uri }}
                           style={{
                             width: 45,
                             height: 45,
@@ -1924,7 +1912,7 @@ export default documentUpload = ({navigation}) => {
                         />
                       )}
                     </View>
-                    <Text style={[styles.subText, {fontWeight: 'bold'}]}>
+                    <Text style={[styles.subText, { fontWeight: 'bold' }]}>
                       Image file to upload
                     </Text>
 
@@ -1948,11 +1936,11 @@ export default documentUpload = ({navigation}) => {
                 </View>
               </View>
               <TouchableOpacity
-                style={{width: '100%', margin: 15, paddingHorizontal: 15}}
+                style={{ width: '100%', margin: 15, paddingHorizontal: 15 }}
                 //onPress={() => navigation.navigate('account')}
                 onPress={handleSubmit}>
-                <View style={[styles.buttonStyle, {height: buttonHeight}]}>
-                  <Text style={[styles.buttonTextStyle, {fontSize: 18}]}>
+                <View style={[styles.buttonStyle, { height: buttonHeight }]}>
+                  <Text style={[styles.buttonTextStyle, { fontSize: 18 }]}>
                     Submit
                   </Text>
                 </View>

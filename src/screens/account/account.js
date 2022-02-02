@@ -106,14 +106,14 @@ export default account = ({navigation}) => {
   };
   const [userData, setUserData] = useState(null);
 
-  useEffect(async () => {
-    const data = JSON.parse(await AsyncStorage.getItem('userToken'));
-    if (data) {
-      setUserData(data);
-      setName(data.driver.name);
-      setMobile(data.driver.cellphone);
-    }
-  }, []);
+  // useEffect(async () => {
+  //   const data = JSON.parse(await AsyncStorage.getItem('userToken'));
+  //   if (data) {
+  //     setUserData(data);
+  //     setName(data.driver.name);
+  //     setMobile(data.driver.cellphone);
+  //   }
+  // }, []);
 
   // ----------------------------------------------------------------------------------------------------
 

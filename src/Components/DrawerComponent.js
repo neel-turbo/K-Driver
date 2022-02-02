@@ -14,12 +14,20 @@ function HomeScreen(props) {
 
     // *******************************logout user details*************************************
 
-    useEffect(async () => {
-        const data = JSON.parse(await AsyncStorage.getItem('userToken'));
+    useEffect( () => {
+        fetch()
+    }, []);
+
+    const fetch = async() =>{
+        try {
+            const data = JSON.parse(await AsyncStorage.getItem('userToken'));
         if (data) {
             setName(data.driver.name);
         }
-    }, []);
+        } catch (error) {
+            
+        }
+    }
 
     //..**************************************************************************************
 
